@@ -23,15 +23,17 @@ class StoryDetails(View):
     model_class = Story
 
     def get(self,request,storyId):
-        story = self.model_class.objects.get(pk=storyId)
-
-        data = {
-            "id":story.pk,
-            "content":story.content
+        data ={
+            "id":storyId,
         }
+        try:
+            story = self.model_class.objects.get(pk=storyId)
+            data["content"] = story.content
+        except:
+            data["content"] = "Not found"
+
         return JsonResponse(data)
 
 
 
 
-# Create your views here.
