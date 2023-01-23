@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import Story
 from django.views.generic import View
 from django.http import JsonResponse
+from .forms import StoryForm
 
 
 class StoriesList(View):
@@ -33,6 +34,28 @@ class StoryDetails(View):
             data["content"] = "Not found"
 
         return JsonResponse(data)
+
+class StoryCreate(View):
+    '''Class to allow users to add a story'''
+
+    model_class = Story
+    form_class = StoryForm
+
+    def get(self,request):
+        return render(request,"components/forms.html",context={"form":self.form_class()})
+
+    def post(self,request):
+        bound_form = self.form_class(request.POST)
+        if bound_form.is_valid():
+            obj = bound_form.save(commit=False)
+            obj.save()
+        return render(request,"components/forms.html",context={"form":self.form_class()})
+
+
+
+
+    
+
 
 
 
