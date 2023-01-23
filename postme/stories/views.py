@@ -1,8 +1,11 @@
 from django.shortcuts import render,redirect
-from .models import Story
 from django.views.generic import View
 from django.http import JsonResponse
+from django.utils.http import url_has_allowed_host_and_scheme
+from django.conf import settings
 from .forms import StoryForm
+from .models import Story
+
 
 
 class StoriesList(View):
@@ -51,7 +54,7 @@ class StoryCreate(View):
         if bound_form.is_valid():
             obj = bound_form.save(commit=False)
             obj.save()
-            if next_url != None:
+            if next_url != None and url_has_allowed_host_and_scheme(next_url,allowed_hosts=settings.ALLOWED_HOSTS):
                 return redirect(next_url)
         return render(request, "components/forms.html", context={"form": self.form_class()})
 
