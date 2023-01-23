@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .models import Story
 from django.views.generic import View
 from django.http import JsonResponse
@@ -46,10 +46,17 @@ class StoryCreate(View):
 
     def post(self,request):
         bound_form = self.form_class(request.POST)
+        next_url = request.POST.get("next")
+        print(next_url)
         if bound_form.is_valid():
             obj = bound_form.save(commit=False)
             obj.save()
-        return render(request,"components/forms.html",context={"form":self.form_class()})
+            if next_url != None:
+                return redirect(next_url)
+        return render(request, "components/forms.html", context={"form": self.form_class()})
+
+
+
 
 
 

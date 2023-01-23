@@ -1,13 +1,21 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+<div class="row mb-3">
+    <div class="col-md-4 mx-auto col-10">
+        <form class="form" method="post" action="{% url 'create_story' %}">
+            {% csrf_token %}
+            <input type="hidden" value="/" name="next" />
+            <textarea class="form-control" name="content" placeholder="Your story....."></textarea>
+            <button class="btn btn-primary" type="submit">Post </button>
+
+        </form>
+    </div>
+</div>
+
 <div class="row" id="tweets">
     Replace
 </div>
-<div class="row">
-    <div class="col-md-4 mx-auto col-10">
-        
-    </div>
-</div>
+
 <script src="{% static 'js/loadstories.js' %}"</script>
 {% endblock content %}
