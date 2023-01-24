@@ -15,7 +15,7 @@ class StoriesList(View):
 
     def get(self,request):
         stories_queryset = self.model_class.objects.all()
-        list_stories = [{'id':x.id,'content':x.content} for x in stories_queryset]
+        list_stories = [x.serialize() for x in stories_queryset]
         data = {
             "response":list_stories
         }
@@ -48,13 +48,13 @@ class StoryCreate(View):
         return render(request,"components/forms.html",context={"form":self.form_class()})
 
     def post(self,request):
-        print(request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest")
         bound_form = self.form_class(request.POST)
         next_url = request.POST.get("next")
-        
         if bound_form.is_valid():
             obj = bound_form.save(commit=False)
             obj.save()
+            if request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest" :
+                return JsonResponse(obj.serialize(), status=201)
             if next_url != None and url_has_allowed_host_and_scheme(next_url,allowed_hosts=settings.ALLOWED_HOSTS):
                 return redirect(next_url)
         return render(request, "components/forms.html", context={"form": self.form_class()})
