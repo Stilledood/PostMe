@@ -1,4 +1,21 @@
 
+
+function handleStoriesCreateFormErrors(msg,display){
+    let errorDiv = document.getElementById("story-create-form-error");
+    if (display === true){
+        // show error
+        errorDiv.setAttribute("class","d-block alert alert-danger");
+        errorDiv.innerText = msg;
+    }
+    else{
+        // hide error
+        errorDiv.setAttribute("class","d-none alert alert-danger");
+    }
+
+}
+
+
+
 function handleStoryFormCreate(event){
     event.preventDefault();
     const myForm = event.target;
@@ -17,6 +34,34 @@ function handleStoryFormCreate(event){
             const formattedStory = formatStoriesElement(newStory);
             const ogHtml = storiesElement.innerHTML;
             storiesElement.innerHTML = formattedStory + ogHtml;
+            myForm.reset();
+        }
+        else if (xhr.status === 400){
+            const errorJson = xhr.response;
+            const conterError = errorJson.content;
+            let contentErrorMessage;
+            if (conterError){
+                contentErrorMessage = conterError[0];
+                if (contentErrorMessage) {
+                    handleStoriesCreateFormErrors(contentErrorMessage,true);
+                }
+                else{
+                    alert("An error occured.Please try again later");
+                }
+
+
+            }
+            else{
+                alert("An error occured.Please try again later");
+            }
+
+
+            
+
+
+
+        } else if (xhr.status === 500){
+            alert('There was a problem on the server side');
         }
         
         

@@ -5,8 +5,9 @@
     <div class="col-md-4 mx-auto col-10">
         <form class="form" id="story-create-form" method="post" action="{% url 'create_story' %}">
             {% csrf_token %}
+            <div class="d-none alert alert-danger" id="story-create-form-error"></div>
             <input type="hidden" value="/" name="next" />
-            <textarea class="form-control" name="content" placeholder="Your story....."></textarea>
+            <textarea class="form-control" name="content" placeholder="Your story....." required="required"></textarea>
             <button class="btn btn-primary" type="submit">Post </button>
 
         </form>

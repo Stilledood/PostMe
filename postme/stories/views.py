@@ -48,13 +48,18 @@ class StoryCreate(View):
         return render(request,"components/forms.html",context={"form":self.form_class()})
 
     def post(self,request):
+
         bound_form = self.form_class(request.POST)
+        if bound_form.errors:
+            if request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest":
+                return JsonResponse(bound_form.errors, status=400)
         next_url = request.POST.get("next")
         if bound_form.is_valid():
             obj = bound_form.save(commit=False)
             obj.save()
             if request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest" :
                 return JsonResponse(obj.serialize(), status=201)
+
             if next_url != None and url_has_allowed_host_and_scheme(next_url,allowed_hosts=settings.ALLOWED_HOSTS):
                 return redirect(next_url)
         return render(request, "components/forms.html", context={"form": self.form_class()})
