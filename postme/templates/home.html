@@ -3,7 +3,7 @@
 {% block content %}
 <div class="row mb-3">
     <div class="col-md-4 mx-auto col-10">
-        <form class="form" method="post" action="{% url 'create_story' %}">
+        <form class="form" id="story-create-form" method="post" action="{% url 'create_story' %}">
             {% csrf_token %}
             <input type="hidden" value="/" name="next" />
             <textarea class="form-control" name="content" placeholder="Your story....."></textarea>
@@ -13,7 +13,7 @@
     </div>
 </div>
 
-<div class="row" id="tweets">
+<div class="row" id="stories">
     Replace
 </div>
 

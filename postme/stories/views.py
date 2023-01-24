@@ -48,9 +48,10 @@ class StoryCreate(View):
         return render(request,"components/forms.html",context={"form":self.form_class()})
 
     def post(self,request):
+        print(request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest")
         bound_form = self.form_class(request.POST)
         next_url = request.POST.get("next")
-        print(next_url)
+        
         if bound_form.is_valid():
             obj = bound_form.save(commit=False)
             obj.save()
