@@ -20,6 +20,7 @@ function handleStoryFormCreate(event){
     event.preventDefault();
     const myForm = event.target;
     const myFormData = new FormData(myForm);
+    console.log(myFormData);
     const url = myForm.getAttribute('action');
     const method = myForm.getAttribute('method');
     const xhr = new XMLHttpRequest();
@@ -31,6 +32,7 @@ function handleStoryFormCreate(event){
     xhr.onload = function(){
         if (xhr.status === 201){
             const newStory = xhr.response;
+            
             const formattedStory = formatStoriesElement(newStory);
             const ogHtml = storiesElement.innerHTML;
             storiesElement.innerHTML = formattedStory + ogHtml;
@@ -48,23 +50,15 @@ function handleStoryFormCreate(event){
                 else{
                     alert("An error occured.Please try again later");
                 }
-
-
             }
             else{
                 alert("An error occured.Please try again later");
             }
 
-
-            
-
-
-
         } else if (xhr.status === 500){
             alert('There was a problem on the server side');
         }
-        
-        
+            
     }
     xhr.send(myFormData);
 
@@ -109,6 +103,7 @@ function loadStories(storiesEl){
 
         
     }
+    
     xhr.send();
 
     }
