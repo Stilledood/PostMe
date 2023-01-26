@@ -36,7 +36,7 @@ class StoriesListWithDjango(View):
         }
         return JsonResponse(data)
 
-class StoryDetails(View):
+class StoryDetailsWithDjango(View):
     '''Class to create a view to extract a specific story from database and return it in Json format to be consumed by javascript'''
 
     model_class = Story
@@ -52,6 +52,23 @@ class StoryDetails(View):
             data["content"] = "Not found"
 
         return JsonResponse(data)
+
+class StoryDetailsWithSerializer(APIView):
+    '''Create a view fot Story objects details using REST'''
+
+    model_class = Story
+
+    def get(self,requets,storyId):
+        try:
+            story = self.model_class.objects.filter(pk=storyId)
+        except:
+            return Response({},status=404)
+
+        obj = story.first()
+        serializer = StorySerializer(obj)
+        return Response(serializer.data,status=200)
+
+
 
 class StoryCreateWithSerializer(APIView):
     '''Class to allow us to create a story object in the database and send back to frontend'''
