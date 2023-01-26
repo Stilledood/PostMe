@@ -4,14 +4,30 @@ from django.http import JsonResponse
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.conf import settings
 from rest_framework.response import Response
+from rest_framework.views import APIView
+import json
 from .forms import StoryForm
 from .models import Story
 from .serializers import StorySerializer
 
 
 
+class StoryListWithSerailizer(APIView):
+    '''Class to construct a list of all Story objects from database (using REST serailizer instead of manual process all data) and send this list to frontend'''
 
-class StoriesList(View):
+    model_class = Story
+
+    def get(self,request):
+        qs = self.model_class.objects.all()
+        serializer = StorySerializer(qs,many=True)
+        data = {
+            "response":[dict(x) for x in serializer.data]
+        }
+
+        return Response(data)
+
+
+class StoriesListWithDjango(View):
     '''Class to create a view to display all stories from database -in Json format so we can consume it via javascript'''
 
     model_class = Story
@@ -41,7 +57,7 @@ class StoryDetails(View):
 
         return JsonResponse(data)
 
-class StoryCreateWithSerializer(View):
+class StoryCreateWithSerializer(APIView):
     '''Class to allow us to create a story object in the database and send back to frontend'''
 
     def post(self,request):
