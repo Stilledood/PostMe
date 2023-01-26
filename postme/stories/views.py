@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from .forms import StoryForm
 from .models import Story
-from .serializers import StorySerializer
+from .serializers import StorySerializer,StoryActionSerializer
 
 
 
@@ -153,6 +153,27 @@ class StoryActionView(APIView):
     class_model = Story
     permission_classes = [IsAuthenticated]
     def get(self,request):
+        serializer = StoryActionSerializer(request.POST)
+        if serializer.is_valid(raise_exception=True):
+            data = serializer.validated_data
+            storyId = data.get('id')
+            action = data.get('action')
+
+            story = self.class_model.objects.get(pk=storyId)
+            if not story.exists():
+                return Response({},status=404)
+            if action == 'like':
+                if not request.user in story.likes.all():
+                    story.likes.add(request.user)
+            elif action == 'unlike':
+                story.likes.remove(request.user)
+            elif action == 'repost':
+                # to do
+                pass
+
+
+
+
 
 
 
