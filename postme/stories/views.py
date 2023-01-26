@@ -145,6 +145,17 @@ class StoryDelete(APIView):
         return Response({"message":"Story removed"},status=200)
 
 
+class StoryActionView(APIView):
+    '''
+    id is required
+    Option are: like,unlike,repost
+    '''
+    class_model = Story
+    permission_classes = [IsAuthenticated]
+    def get(self,request):
+
+
+
 
 
 
