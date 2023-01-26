@@ -5,7 +5,8 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.conf import settings
 from rest_framework.response import Response
 from rest_framework.views import APIView
-import json
+from rest_framework.permissions import IsAuthenticated
+
 from .forms import StoryForm
 from .models import Story
 from .serializers import StorySerializer
@@ -57,6 +58,7 @@ class StoryDetailsWithSerializer(APIView):
     '''Create a view fot Story objects details using REST'''
 
     model_class = Story
+    permission_classes = [IsAuthenticated]
 
     def get(self,requets,storyId):
         try:
@@ -72,6 +74,8 @@ class StoryDetailsWithSerializer(APIView):
 
 class StoryCreateWithSerializer(APIView):
     '''Class to allow us to create a story object in the database and send back to frontend'''
+
+    permission_classes = [IsAuthenticated]
 
     def post(self,request):
         serializer = StorySerializer(data=request.POST)
