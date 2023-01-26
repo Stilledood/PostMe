@@ -20,11 +20,7 @@ class StoryListWithSerailizer(APIView):
     def get(self,request):
         qs = self.model_class.objects.all()
         serializer = StorySerializer(qs,many=True)
-        data = {
-            "response":[dict(x) for x in serializer.data]
-        }
-
-        return Response(data)
+        return Response(serializer.data)
 
 
 class StoriesListWithDjango(View):
