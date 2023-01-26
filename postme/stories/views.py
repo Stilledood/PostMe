@@ -60,6 +60,7 @@ class StoryDetailsWithSerializer(APIView):
     model_class = Story
     permission_classes = [IsAuthenticated]
 
+
     def get(self,requets,storyId):
         try:
             story = self.model_class.objects.filter(pk=storyId)
@@ -76,6 +77,7 @@ class StoryCreateWithSerializer(APIView):
     '''Class to allow us to create a story object in the database and send back to frontend'''
 
     permission_classes = [IsAuthenticated]
+
 
     def post(self,request):
         serializer = StorySerializer(data=request.POST)
@@ -120,6 +122,28 @@ class StoryCreateWithPureDjango(View):
 
 
         return render(request, "components/forms.html", context={"form": self.form_class()})
+
+
+
+
+class StoryDelete(APIView):
+
+    model_class = Story
+    permission_classes = [IsAuthenticated]
+
+    def delete(self,request,storyId):
+        qs = self.model_class.objects.filter(pk=storyId)
+        if not qs.exists():
+            return Response({},status=404)
+
+        qs = qs.filter(user=request.user)
+        if not qs.exists():
+            return Response({"message":"You can not delete this story"},status=401)
+
+        obj = qs.first()
+        obj.delete()
+        return Response({"message":"Story removed"},status=200)
+
 
 
 
