@@ -12,6 +12,7 @@ class StoryLike(models.Model):
 class Story(models.Model):
     '''Class to construct the model class for stories'''
 
+    parent = models.ForeignKey("self",null=True,on_delete=models.SET_NULL)
     content = models.TextField(blank=True,null=True)
     image = models.FileField(upload_to='images/', null=True,blank=True)
     user = models.ForeignKey(User,on_delete=models.CASCADE)

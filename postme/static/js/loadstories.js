@@ -93,13 +93,13 @@ storyCreateFormElement.addEventListener("submit",handleStoryFormCreate);
 const storiesElement = document.getElementById("stories");
 
 // function to handle like button press
-function handleTweetActionBtn(storyId,currentCount){
+function handleTweetActionBtn(storyId,currentCount,action){
     const csrftoken = getCookie('csrftoken');
     const url = "/stories/action";
     const method = "POST";
     const data = JSON.stringify({
         id : storyId,
-        action : "like",
+        action : action,
     });
 
     const xhr = new XMLHttpRequest();
@@ -109,7 +109,7 @@ function handleTweetActionBtn(storyId,currentCount){
     xhr.setRequestHeader("HTTP_X_REQUESTED_WITH","XMLHttpRequest");
     xhr.setRequestHeader('X-CSRFToken',csrftoken);
     xhr.onload = function(){
-        console.log(xhr.status,xhr.response);
+        loadStories(storiesElement);
     }
 
     xhr.send(data);
@@ -123,9 +123,15 @@ function handleTweetActionBtn(storyId,currentCount){
 function likeBtn(item){
     return "<button class='btn btn-primary btn-sm' onclick=handleTweetActionBtn(" + 
     item.pk + "," + item.likes + ",'like')>" + item.likes + " Likes</button>"
+}
+function unlikeBtn(item){
+    return "<button class='btn btn-outline-primary btn-sm' onclick=handleTweetActionBtn(" + 
+    item.pk + "," + item.likes + ",'unlike')> Unlike</button>"
+}
 
-
-
+function repostBtn(item){
+    return "<button class='btn btn-outline-success btn-sm' onclick=handleTweetActionBtn(" + 
+    item.pk + "," + item.likes + ",'repost')> Repost</button>"
 }
 function loadStories(storiesEl){
     const xhr = new XMLHttpRequest();
@@ -156,7 +162,7 @@ function formatStoriesElement(story){
     let formattedStory = "<div class='col-12 col-md-10 mx-auto border rounded py-3 mb-4 story' id='stories" + story.pk
     + "'><p>" + story.content +
         "</p><div class='btn-group'>" +
-            likeBtn(story)+"</div></div>"
+            likeBtn(story)+unlikeBtn(story)+repostBtn(story)+"</div></div>"
     return  formattedStory
 }
 

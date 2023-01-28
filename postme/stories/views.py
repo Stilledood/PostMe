@@ -167,11 +167,16 @@ class StoryActionView(APIView):
             if action == 'like':
                 if not request.user in story.likes.all():
                     story.likes.add(request.user)
+                    serializer = StorySerializer(story)
+                    return Response(serializer.data,status=200)
             elif action == 'unlike':
                 story.likes.remove(request.user)
             elif action == 'repost':
-                # to do
-                pass
+                repost_story = Story.objects.create(
+                    user=request.user,
+                    parent=story)
+                serializer = StorySerializer(repost_story)
+                return Response(serializer.data,status=200)
             return Response({"like added"},status=200)
 
 
