@@ -55,7 +55,7 @@ class StoryDetailsWithDjango(View):
         return JsonResponse(data)
 
 class StoryDetailsWithSerializer(APIView):
-    '''Create a view fot Story objects details using REST'''
+    ''' Create a view fot Story objects details using REST '''
 
     model_class = Story
     permission_classes = [IsAuthenticated]
@@ -152,15 +152,17 @@ class StoryActionView(APIView):
     '''
     class_model = Story
     permission_classes = [IsAuthenticated]
-    def get(self,request):
-        serializer = StoryActionSerializer(request.POST)
+    def post(self,request):
+        serializer = StoryActionSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             data = serializer.validated_data
             storyId = data.get('id')
             action = data.get('action')
 
-            story = self.class_model.objects.get(pk=storyId)
-            if not story.exists():
+            story_queryset = self.class_model.objects.filter(pk=storyId)
+            story = story_queryset[0]
+            print(story)
+            if not story:
                 return Response({},status=404)
             if action == 'like':
                 if not request.user in story.likes.all():
@@ -170,6 +172,7 @@ class StoryActionView(APIView):
             elif action == 'repost':
                 # to do
                 pass
+            return Response({"like added"},status=200)
 
 
 
