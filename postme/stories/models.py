@@ -28,12 +28,10 @@ class Story(models.Model):
             obj = "No text , only photo"
         return obj
 
-    def serialize(self):
-        return {
-            "id":self.pk,
-            "content":self.content
-        }
 
+    @property
+    def is_repost(self):
+        return self.parent != None
 
 
 

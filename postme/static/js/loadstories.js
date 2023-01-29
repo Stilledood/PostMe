@@ -100,7 +100,9 @@ function handleTweetActionBtn(storyId,currentCount,action){
     const data = JSON.stringify({
         id : storyId,
         action : action,
-    });
+        
+    })
+    console.log(data);
 
     const xhr = new XMLHttpRequest();
     xhr.open(method,url)
@@ -110,9 +112,9 @@ function handleTweetActionBtn(storyId,currentCount,action){
     xhr.setRequestHeader('X-CSRFToken',csrftoken);
     xhr.onload = function(){
         loadStories(storiesElement);
-    }
-
+    };
     xhr.send(data);
+    return
 
 
 
@@ -122,16 +124,16 @@ function handleTweetActionBtn(storyId,currentCount,action){
 // function to automatically add a like button to every story
 function likeBtn(item){
     return "<button class='btn btn-primary btn-sm' onclick=handleTweetActionBtn(" + 
-    item.pk + "," + item.likes + ",'like')>" + item.likes + " Likes</button>"
+    item.id + "," + item.likes + ",'like')>" + item.likes + " Likes</button>"
 }
 function unlikeBtn(item){
     return "<button class='btn btn-outline-primary btn-sm' onclick=handleTweetActionBtn(" + 
-    item.pk + "," + item.likes + ",'unlike')> Unlike</button>"
+    item.id + "," + item.likes + ",'unlike')> Unlike</button>"
 }
 
 function repostBtn(item){
     return "<button class='btn btn-outline-success btn-sm' onclick=handleTweetActionBtn(" + 
-    item.pk + "," + item.likes + ",'repost')> Repost</button>"
+    item.id + "," + item.likes + ",'repost')> Repost</button>"
 }
 function loadStories(storiesEl){
     const xhr = new XMLHttpRequest();
@@ -159,7 +161,7 @@ function loadStories(storiesEl){
     }
 // function to format stories output
 function formatStoriesElement(story){
-    let formattedStory = "<div class='col-12 col-md-10 mx-auto border rounded py-3 mb-4 story' id='stories" + story.pk
+    let formattedStory = "<div class='col-12 col-md-10 mx-auto border rounded py-3 mb-4 story' id='stories" + story.id
     + "'><p>" + story.content +
         "</p><div class='btn-group'>" +
             likeBtn(story)+unlikeBtn(story)+repostBtn(story)+"</div></div>"

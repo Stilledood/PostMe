@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from .forms import StoryForm
 from .models import Story
-from .serializers import StorySerializer,StoryActionSerializer
+from .serializers import StorySerializer,StoryActionSerializer,StoryCreateSerializer
 
 
 
@@ -80,7 +80,7 @@ class StoryCreateWithSerializer(APIView):
 
 
     def post(self,request):
-        serializer = StorySerializer(data=request.POST)
+        serializer = StoryCreateSerializer(data=request.POST)
 
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user)
@@ -152,16 +152,16 @@ class StoryActionView(APIView):
     '''
     class_model = Story
     permission_classes = [IsAuthenticated]
+
     def post(self,request):
         serializer = StoryActionSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             data = serializer.validated_data
             storyId = data.get('id')
             action = data.get('action')
-
+            content= data.get('content')
             story_queryset = self.class_model.objects.filter(pk=storyId)
             story = story_queryset[0]
-            print(story)
             if not story:
                 return Response({},status=404)
             if action == 'like':
@@ -170,13 +170,16 @@ class StoryActionView(APIView):
                     serializer = StorySerializer(story)
                     return Response(serializer.data,status=200)
             elif action == 'unlike':
-                story.likes.remove(request.user)
+                if request.user in story.likes.all():
+                    story.likes.remove(request.user)
             elif action == 'repost':
                 repost_story = Story.objects.create(
                     user=request.user,
-                    parent=story)
+                    parent=story,
+                    content=content,
+                    )
                 serializer = StorySerializer(repost_story)
-                return Response(serializer.data,status=200)
+                return Response(serializer.data,status=201)
             return Response({"like added"},status=200)
 
 
