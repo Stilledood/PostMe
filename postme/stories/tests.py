@@ -10,10 +10,12 @@ class StoryTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='Gigi',password='testuserpassword')
         Story.objects.create(content='my first test story',user=self.user)
+        Story.objects.create(content='my first test story 2', user=self.user)
+        Story.objects.create(content='my first test story 3', user=self.user)
 
     def test_story_created(self):
-        story = Story.objects.create(content='my second test story',user=self.user)
-        self.assertEqual(story.id,2)
+        story = Story.objects.create(content='my second test story 4',user=self.user)
+        self.assertEqual(story.id,4)
         self.assertEqual(story.user,self.user)
 
     def get_client(self):
@@ -26,8 +28,18 @@ class StoryTestCase(TestCase):
         response = client.get('/stories/')
         self.assertEqual(response.status_code,200)
         content = response.json()
-        self.assertEqual(content[0]['id'],1)
-        self.assertEqual(len(content),1)
+        self.assertEqual(content[0]['id'],3)
+        self.assertEqual(len(content),3)
+
+    def test_action_like(self):
+        client = self.get_client()
+        response = client.post("/stories/action",{"id":1,"action":"like"})
+        self.assertEqual(response.status_code,200)
+        like_count = response.json().get('likes')
+        self.assertEqual(like_count,1)
+
+
+
 
 
 
