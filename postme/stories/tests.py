@@ -47,6 +47,17 @@ class StoryTestCase(TestCase):
         like_count = response.json().get('likes')
         self.assertEqual(like_count,0)
 
+    def test_action_repost(self):
+        client = self.get_client()
+        response = client.post("/stories/action", {"id": 2, "action": "repost"})
+        self.assertEqual(response.status_code,201)
+        data = response.json()
+        new_story_id= data.get('id')
+        self.assertNotEqual(new_story_id,2)
+
+
+
+
 
 
 
