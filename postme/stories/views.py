@@ -178,7 +178,7 @@ class StoryActionView(APIView):
                 repost_story = Story.objects.create(
                     user=request.user,
                     parent=story,
-                    content=content,
+                    content=story.content,
                     )
                 serializer = StorySerializer(repost_story)
                 return Response(serializer.data,status=201)
