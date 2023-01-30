@@ -2,6 +2,8 @@ import logo from './logo.svg';
 import './App.css';
 import React,{useEffect,useState} from 'react';
 
+import {Story} from './stories';
+
 
 function loadStories(callback){
   const xhr = new XMLHttpRequest();
@@ -21,14 +23,6 @@ function loadStories(callback){
   } 
 
 
-function Story(props){
-  const {story} = props;
-  const className = props.className ? props.className:'col-10 mx-auto col-md-6';
-  return <div className={className}> 
-    <p>{story.id} - {story.content}</p>
-  </div>
-
-}
 
 function App() {
   const [stories,setStories] = useState([]);
@@ -48,19 +42,12 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
+        <div>
           {stories.map((item,index)=>{
-            return <Story story={item} key={index} className ='my-5 py-5 border bg-white text-dark' />
+            return <Story story={item} key={`${index}-{item.id}`} className ='my-5 py-5 border bg-white text-dark' />
           })}
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        </div>
+        
       </header>
     </div>
   );
