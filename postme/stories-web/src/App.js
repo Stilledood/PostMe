@@ -21,7 +21,14 @@ function loadStories(callback){
   } 
 
 
+function Story(props){
+  const {story} = props;
+  const className = props.className ? props.className:'col-10 mx-auto col-md-6';
+  return <div className={className}> 
+    <p>{story.id} - {story.content}</p>
+  </div>
 
+}
 
 function App() {
   const [stories,setStories] = useState([]);
@@ -42,8 +49,8 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          {stories.map((story,index)=>{
-            return <li>{story.content}</li>
+          {stories.map((item,index)=>{
+            return <Story story={item} key={index} className ='my-5 py-5 border bg-white text-dark' />
           })}
         </p>
         <a
