@@ -1,6 +1,7 @@
-import {ActionBtn,Story} from './components'
+import {ActionBtn,Story,StoriesList} from './components'
 
 export {
     ActionBtn,
-    Story
+    Story,
+    StoriesList
 }
