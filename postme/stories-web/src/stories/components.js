@@ -20,6 +20,27 @@ function loadStories(callback){
 
   }
 
+export function StoryComponent(props) {
+
+
+
+  const handleSubmit = (event) =>{
+    event.preventDefault();
+    console.log(event);
+
+  }
+  return <div className={props.className}> 
+            <div className='col-12 mb-3'>
+            <form onSubmit={handleSubmit}>
+              
+              <textarea className='form-control' name='story'>
+              </textarea>
+              <button type='submit' className='btb btn-primary my-3'>Post</button>
+            </form>
+            </div>
+        </div>;
+}
+
 export function StoriesList(props){
     const [stories,setStories] = useState([]);
     useEffect(() =>{
@@ -49,7 +70,7 @@ export function ActionBtn(props) {
   const handleClick = (event) =>{
     event.preventDefault();
     if (action.type === 'like'){
-      if (justClicked === 'true'){
+      if (justClicked === true){
         setLikes(likes-1);
         setJustClicked(false);        
       }else{
