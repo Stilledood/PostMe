@@ -43,8 +43,25 @@ export function StoriesList(props){
 export function ActionBtn(props) {
   const {story,action} = props;
   const className = props.className ? props.className : 'btn btn-primary btn-sm';
-  const display = action.type === 'like'? `${story.likes} ${action.display}`:action.display;
-  return  <button className={className} > {display} </button>;
+  const actionDisplay = action.display ? action.display:"Action";
+  const [likes,setLikes] = useState(story.likes ? story.likes:0);
+  const [justClicked,setJustClicked] =useState(false); 
+  const handleClick = (event) =>{
+    event.preventDefault();
+    if (action.type === 'like'){
+      if (justClicked === 'true'){
+        setLikes(likes-1);
+        setJustClicked(false);        
+      }else{
+        setLikes(story.likes+1); 
+        setJustClicked(true);
+        console.log(justClicked);
+      }     
+    }
+  };
+    
+  const display = action.type === 'like'? `${likes} ${actionDisplay}`:actionDisplay;
+  return  <button className={className} onClick={handleClick} > {display} </button>;
 }
 export function Story(props){
   const {story} = props;

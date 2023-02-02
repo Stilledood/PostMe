@@ -8,7 +8,7 @@ import {Story,StoriesList} from './stories';
 
 
 function App() {
-  const [stories,setStories] = useState([]);
+  
  
   return (
     <div className="App">
