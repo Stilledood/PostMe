@@ -21,24 +21,22 @@ function loadStories(callback){
   }
 
 export function StoryComponent(props) {
-
-
-
+  const textAreaRef = React.createRef();
+  
   const handleSubmit = (event) =>{
     event.preventDefault();
-    console.log(event);
-
+    console.log(textAreaRef.current.value);
+    textAreaRef.current.value ='';
   }
   return <div className={props.className}> 
             <div className='col-12 mb-3'>
-            <form onSubmit={handleSubmit}>
-              
-              <textarea className='form-control' name='story'>
+            <form onSubmit={handleSubmit}>          
+              <textarea ref={textAreaRef} required={true} className='form-control' name='story'>
               </textarea>
-              <button type='submit' className='btb btn-primary my-3'>Post</button>
+              <button type='submit' className='btb btn-primary my-3' onClick={handleSubmit}>Post</button>
             </form>
             </div>
-        </div>;
+        </div>
 }
 
 export function StoriesList(props){
