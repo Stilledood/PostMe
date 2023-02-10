@@ -26,17 +26,19 @@ export function StoryComponent(props) {
   const handleSubmit = (event) =>{
     event.preventDefault();
     console.log(textAreaRef.current.value);
+    const newValue = textAreaRef.value;
     textAreaRef.current.value ='';
   }
   return <div className={props.className}> 
             <div className='col-12 mb-3'>
-            <form onSubmit={handleSubmit}>          
-              <textarea ref={textAreaRef} required={true} className='form-control' name='story'>
-              </textarea>
-              <button type='submit' className='btb btn-primary my-3' onClick={handleSubmit}>Post</button>
-            </form>
+              <form onSubmit={handleSubmit}>          
+                <textarea ref={textAreaRef} required={true} className='form-control' name='story'>
+                </textarea>
+                <button type='submit' className='btb btn-primary my-3' onClick={handleSubmit}>Post</button>
+              </form>
             </div>
-        </div>
+          </div>
+          
 }
 
 export function StoriesList(props){
@@ -84,13 +86,15 @@ export function ActionBtn(props) {
 }
 export function Story(props){
   const {story} = props;
-  const className = props.className ? props.className:'col-10 mx-auto col-md-6';
-  return <div className={className}>
-    <p>{story.id} - {story.content}</p>
-    <div className='btn btn-group'>
-      <ActionBtn story={story} action={{type:"like",display:"Likes"}}></ActionBtn>
-      <ActionBtn story={story} action={{type:"Unlike",display:"Unlike"}}></ActionBtn>
-      <ActionBtn story={story} action={{type:"repost",display:"Repost"}}></ActionBtn>
+  const className = props.className ? props.className:'col-12 mx-auto col-md-8';
+  return <div className='col-12 mb-3'>
+    <div className={className}>
+        <p>{story.id} - {story.content}</p>
+        <div className='btn btn-group'>
+          <ActionBtn story={story} action={{type:"like",display:"Likes"}}></ActionBtn>
+          <ActionBtn story={story} action={{type:"Unlike",display:"Unlike"}}></ActionBtn>
+          <ActionBtn story={story} action={{type:"repost",display:"Repost"}}></ActionBtn>
+      </div>
     </div>
   </div>
 

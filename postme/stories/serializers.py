@@ -25,6 +25,7 @@ class StoryActionSerializer(serializers.Serializer):
     action = serializers.CharField()
     content = serializers.CharField(allow_blank=True,required=False)
 
+
     def clean_action(self,value):
         value = value.lower().strip()
         if not value in ALLOWED_ACTIONS:

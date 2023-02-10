@@ -17,10 +17,9 @@ function App() {
         <div>
           < StoryComponent />
         </div>
-        <div>
-          <StoriesList />
+        <div className='col-12 mb-3'>
+          <StoriesList/>
         </div>
-        
       </header>
     </div>
   );
