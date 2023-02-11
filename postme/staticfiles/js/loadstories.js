@@ -91,10 +91,12 @@ function handleStoryFormCreate(event){
 const storyCreateFormElement = document.getElementById("story-create-form");
 storyCreateFormElement.addEventListener("submit",handleStoryFormCreate);
 const storiesElement = document.getElementById("stories");
+const formText = document.getElementById("form-text");
 
 
 // function to handle like button press
-function handleTweetActionBtn(storyId,currentCount,action){
+function handleStoryActionBtn(storyId,currentCount,action){
+    console.log(action);
     const csrftoken = getCookie('csrftoken');
     const url = "/stories/action";
     const method = "POST";
@@ -102,10 +104,8 @@ function handleTweetActionBtn(storyId,currentCount,action){
         id : storyId,
         action : action,
         
-    })
-    if (action === 'repost'){
-       formText.innerHTML ="repost";
-    }
+    });
+ 
 
     const xhr = new XMLHttpRequest();
     xhr.open(method,url)
@@ -126,16 +126,20 @@ function handleTweetActionBtn(storyId,currentCount,action){
 
 // function to automatically add a like button to every story
 function likeBtn(item){
-    return "<button class='btn btn-primary btn-sm' onclick=handleTweetActionBtn(" + 
-    item.id + "," + item.likes + ",'like')>" + item.likes + " Likes</button>"
+    return "<button class='btn btn-primary btn-sm' onclick=handleStoryActionBtn(" + 
+    item.id + "," + item.likes +  ",'like')>" + item.likes  +" Likes</button>"
 }
 function unlikeBtn(item){
-    return "<button class='btn btn-outline-primary btn-sm' onclick=handleTweetActionBtn(" + 
+  
+
+    return "<button class='btn btn-outline-primary btn-sm' onclick=handleStoryActionBtn(" + 
     item.id + "," + item.likes + ",'unlike')> Unlike</button>"
 }
 
 function repostBtn(item){
-    return "<button class='btn btn-outline-success btn-sm' onclick=handleTweetActionBtn(" + 
+    let content = item.content?item.content:"";
+    storyCreateFormElement.value = content;
+    return "<button class='btn btn-outline-success btn-sm' onclick=handleStoryActionBtn(" + 
     item.id + "," + item.likes + ",'repost')> Repost</button>"
 }
 function loadStories(storiesEl){
@@ -148,9 +152,11 @@ function loadStories(storiesEl){
     xhr.onload = function(){
         const serverResponse = xhr.response;
         let listedItems = serverResponse;
+        
         let finalStoryString = '';
         for (let i = 0;i < listedItems.length;i++){
             let item = formatStoriesElement(listedItems[i]);
+           
             finalStoryString += item;
         }
 
