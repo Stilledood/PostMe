@@ -62,21 +62,20 @@ export function loadStories(callback){
 export function StoryComponent(props) {
   const textAreaRef = React.createRef();
   const [newStories,setNewStories] = useState([]);
-  
+  const handleBackendUpdate = (response,status) =>{
+    let tempNewStories =[...newStories]
+    if (status === 201){
+      tempNewStories.unshift(response)
+      setNewStories(tempNewStories);
+    }else{
+      alert(`There was an eror: ${status}`)
+    }
+
+  }
   const handleSubmit = (event) =>{
     event.preventDefault();
     const newValue = textAreaRef.current.value;
-    
-    createStory(newValue,(response,status)=>{
-      if (status === 201){
-        tempNewStories.unshift(response)
-        setNewStories(tempNewStories);
-      }else{
-        alert(`There was an eror: ${status}`)
-      }
-    });
-    let tempNewStories = [...newStories];
-    
+    createStory(newValue,handleBackendUpdate);
     textAreaRef.current.value ='';
     
   }
