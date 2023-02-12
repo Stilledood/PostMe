@@ -80,7 +80,7 @@ class StoryCreateWithSerializer(APIView):
 
 
     def post(self,request):
-        
+
         print(request.data)
         serializer = StoryCreateSerializer(data=request.data)
 
@@ -170,7 +170,12 @@ class StoryActionView(APIView):
                 if not request.user in story.likes.all():
                     story.likes.add(request.user)
                     serializer = StorySerializer(story)
+                    print(serializer.data)
                     return Response(serializer.data,status=200)
+                else:
+                    story.likes.remove(request.user)
+                    serializer = StorySerializer(story)
+                    return Response(serializer.data, status=200)
             elif action == 'unlike':
                 if request.user in story.likes.all():
                     story.likes.remove(request.user)

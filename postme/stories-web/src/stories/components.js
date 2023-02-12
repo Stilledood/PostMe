@@ -48,13 +48,16 @@ function lookup(method,endpoint,callback,data){
 }
 
 
-export function createStory(newStory,callback){
-
+export function apiStoryCreate(newStory,callback){
   lookup("POST","stories/create-story",callback,{content:newStory});
-
 }
 
-export function loadStories(callback){
+
+export function apiStoryAction(storyId,action,content,callback){
+  lookup("POST","stories/action",callback,{id:storyId,action:action,content:content});
+}
+
+export function apiStoriesList(callback){
   lookup("GET","stories/",callback)
 
 }
@@ -75,7 +78,7 @@ export function StoryComponent(props) {
   const handleSubmit = (event) =>{
     event.preventDefault();
     const newValue = textAreaRef.current.value;
-    createStory(newValue,handleBackendUpdate);
+    apiStoryCreate(newValue,handleBackendUpdate);
     textAreaRef.current.value ='';
     
   }
@@ -108,7 +111,7 @@ export function StoriesList(props){
     },[props.newStories,storiesInit,stories])
     useEffect(() =>{
         if (storiesDidSet === false){
-          const myCallback = (response,status) => {
+          const handleStoriesLookup = (response,status) => {
             if (status === 200){
               setStoriesInit(response);
               setStoriesDidSet(true);
@@ -117,7 +120,7 @@ export function StoriesList(props){
             }
   
           }
-          loadStories(myCallback);
+          apiStoriesList(handleStoriesLookup);
         }
 
       },[storiesInit,storiesDidSet,setStoriesDidSet])
@@ -133,8 +136,8 @@ export function ActionBtn(props) {
   const actionDisplay = action.display ? action.display:"Action";
   const [likes,setLikes] = useState(story.likes ? story.likes:0);
   const [justClicked,setJustClicked] =useState(false); 
-  const handleClick = (event) =>{
-    event.preventDefault();
+  const handleActionEvent = (response,status) =>{
+    console.log(response);
     if (action.type === 'like'){
       if (justClicked === true){
         setLikes(likes-1);
@@ -142,9 +145,15 @@ export function ActionBtn(props) {
       }else{
         setLikes(story.likes+1); 
         setJustClicked(true);
-        console.log(justClicked);
+        
       }     
     }
+  }
+
+  const handleClick = (event) =>{
+    event.preventDefault();
+    apiStoryAction(story.id,action.type,story.content,handleActionEvent);
+    
   };
     
   const display = action.type === 'like'? `${likes} ${actionDisplay}`:actionDisplay;
