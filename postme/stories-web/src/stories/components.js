@@ -61,7 +61,7 @@ export function StoriesList(props){
         setStories(final);
       }
 
-    },[props.newStories,storiesInit])
+    },[props.newStories,storiesInit,stories])
     useEffect(() =>{
         const myCallback = (response,status) => {
           if (status === 200){

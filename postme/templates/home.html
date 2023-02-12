@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<div class="row mb-3">
+<div class="row mb-3 d-none">
     <div class="col-md-4 mx-auto col-10">
         <form class="form" id="story-create-form" method="post" action="{% url 'create_story' %}">
             {% csrf_token %}
@@ -14,9 +14,9 @@
     </div>
 </div>
 
-<div class="row" id="stories">
+<div class="row" id="postme-stories">
     Replace
 </div>
 
-<script src="{% static 'js/loadstories.js' %}"></script>
+
 {% endblock content %}
