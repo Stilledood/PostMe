@@ -1,24 +1,30 @@
 import React,{useEffect,useState} from 'react';
 
+function lookup(method,endpoint,callback,data){
+  let jsonData;
+  if (data){
+    jsonData = JSON.stringify(data);
+  }
 
+  const xhr = new XMLHttpRequest();
+  const url = `http://localhost:8000/${endpoint}`;
+  const responseType = 'json';
+  xhr.responseType = responseType;
+  xhr.open(method,url)
+  xhr.onload=function(){
+    callback(xhr.response,xhr.status);
+  }
+  xhr.onerror = function(e){
+    callback({"message":"The request has an error"},400);
+  }
+  xhr.send(jsonData);
+}
 
 
 function loadStories(callback){
-  const xhr = new XMLHttpRequest();
-  const method = "GET";
-  const url = "http://localhost:8000/stories/";
-  const responseType = "json";
-  xhr.responseType = responseType;
-  xhr.open(method,url);
-  xhr.onload = function(){
-        callback(xhr.response,xhr.status);
-  }
-  xhr.onerror = function(e){
-    callback({"message":"The request was an error"},400);
-  }
-  xhr.send();
+  lookup("GET","stories",callback)
 
-  }
+}
 
 export function StoryComponent(props) {
   const textAreaRef = React.createRef();
@@ -54,6 +60,7 @@ export function StoryComponent(props) {
 export function StoriesList(props){
     const [storiesInit,setStoriesInit] = useState([]);
     const [stories,setStories] = useState([]);
+    const [storiesDidSet,setStoriesDidSet] = useState(false)
     
     useEffect(()=>{
       let final =[...props.newStories].concat(storiesInit);
@@ -63,17 +70,21 @@ export function StoriesList(props){
 
     },[props.newStories,storiesInit,stories])
     useEffect(() =>{
-        const myCallback = (response,status) => {
-          if (status === 200){
-            setStoriesInit(response);
-          }else{
-            alert('There was an error')
+        if (storiesDidSet === false){
+          const myCallback = (response,status) => {
+            if (status === 200){
+              setStoriesInit(response);
+              setStoriesDidSet(true);
+            }else{
+              alert('There was an error')
+            }
+  
           }
-
         }
+        
         loadStories(myCallback);
 
-      },[])
+      },[storiesInit,storiesDidSet,setStoriesDidSet])
       return stories.map((item,index)=>{
           return <Story story={item}  className ='col-12 mb-3 border bg-white text-dark width=50%'  key={`${index}-{item.id}`}  />
   })}
