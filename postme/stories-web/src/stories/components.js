@@ -1,5 +1,22 @@
 import React,{useEffect,useState} from 'react';
 
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
+}
+
+
 function lookup(method,endpoint,callback,data){
   let jsonData;
   if (data){
@@ -10,7 +27,15 @@ function lookup(method,endpoint,callback,data){
   const url = `http://localhost:8000/${endpoint}`;
   const responseType = 'json';
   xhr.responseType = responseType;
+  const csrftoken = getCookie('csrftoken');
   xhr.open(method,url)
+  
+  if (csrftoken){
+    xhr.setRequestHeader("X-Requested-With","XMLHttpRequest");
+    xhr.setRequestHeader("x-requested-with","XMLHttpRequest");
+    xhr.setRequestHeader('X-CSRFToken',csrftoken);
+  }
+  
   xhr.onload=function(){
     callback(xhr.response,xhr.status);
   }
@@ -21,8 +46,13 @@ function lookup(method,endpoint,callback,data){
 }
 
 
-function loadStories(callback){
-  lookup("GET","stories",callback)
+export function createStory(newStory,callback){
+  lookup("POST","stories/create-story/",callback,{content:newStory});
+
+}
+
+export function loadStories(callback){
+  lookup("GET","stories/",callback)
 
 }
 
@@ -33,6 +63,13 @@ export function StoryComponent(props) {
   const handleSubmit = (event) =>{
     event.preventDefault();
     const newValue = textAreaRef.current.value;
+    createStory(newValue,(response,status)=>{
+      if (status === 201){
+        tempNewStories.unshift(response)
+      }else{
+        alert(`There was an eror: ${status}`)
+      }
+    });
     let tempNewStories = [...newStories];
     tempNewStories.unshift({
       content:newValue,
@@ -80,9 +117,8 @@ export function StoriesList(props){
             }
   
           }
+          loadStories(myCallback);
         }
-        
-        loadStories(myCallback);
 
       },[storiesInit,storiesDidSet,setStoriesDidSet])
       return stories.map((item,index)=>{

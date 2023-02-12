@@ -28,7 +28,7 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = True
 MAX_STORY_LENGTH = 500
 ALLOWED_ACTIONS = ['like','unlike','repost']
-ALLOWED_HOSTS = ["127.0.0.1","localhost"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -139,6 +139,25 @@ CORS_URLS_REGEX = r"^/stories/.*$"
 DEFAULT_RENDERER_CLASSES = [
         'rest_framework.renderers.JSONRenderer',
     ]
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
 if DEBUG:
     DEFAULT_RENDERER_CLASSES = DEFAULT_RENDERER_CLASSES + ['rest_framework.renderers.BrowsableAPIRenderer']
 REST_FRAMEWORK = {
