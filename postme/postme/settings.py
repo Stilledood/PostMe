@@ -158,13 +158,20 @@ CORS_ALLOW_HEADERS = [
     "x-csrftoken",
     "x-requested-with",
 ]
+DEFAULT_AUTHENTICATION_CLASSES = [
+    'rest_framework.authentication.SessionAuthentication',
+]
+
 if DEBUG:
     DEFAULT_RENDERER_CLASSES = DEFAULT_RENDERER_CLASSES + ['rest_framework.renderers.BrowsableAPIRenderer']
+    DEFAULT_AUTHENTICATION_CLASSES +=[
+        "postme.rest_api.customauthentication.CustomAuthentication"
+    ]
+
 REST_FRAMEWORK = {
 
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': DEFAULT_AUTHENTICATION_CLASSES,
+
     'DEFAULT_RENDERER_CLASSES': DEFAULT_RENDERER_CLASSES
 
 }

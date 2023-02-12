@@ -80,7 +80,9 @@ class StoryCreateWithSerializer(APIView):
 
 
     def post(self,request):
-        serializer = StoryCreateSerializer(data=request.POST)
+        
+        print(request.data)
+        serializer = StoryCreateSerializer(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user)

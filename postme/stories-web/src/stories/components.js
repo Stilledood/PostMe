@@ -20,7 +20,8 @@ function getCookie(name) {
 function lookup(method,endpoint,callback,data){
   let jsonData;
   if (data){
-    jsonData = JSON.stringify(data);
+     jsonData = JSON.stringify(data);
+     console.log(jsonData)
   }
 
   const xhr = new XMLHttpRequest();
@@ -31,6 +32,7 @@ function lookup(method,endpoint,callback,data){
   xhr.open(method,url)
   
   if (csrftoken){
+    xhr.setRequestHeader("Content-Type","application/json");
     xhr.setRequestHeader("X-Requested-With","XMLHttpRequest");
     xhr.setRequestHeader("x-requested-with","XMLHttpRequest");
     xhr.setRequestHeader('X-CSRFToken',csrftoken);
@@ -47,7 +49,8 @@ function lookup(method,endpoint,callback,data){
 
 
 export function createStory(newStory,callback){
-  lookup("POST","stories/create-story/",callback,{content:newStory});
+
+  lookup("POST","stories/create-story",callback,{content:newStory});
 
 }
 
@@ -63,21 +66,19 @@ export function StoryComponent(props) {
   const handleSubmit = (event) =>{
     event.preventDefault();
     const newValue = textAreaRef.current.value;
+    
     createStory(newValue,(response,status)=>{
       if (status === 201){
         tempNewStories.unshift(response)
+        setNewStories(tempNewStories);
       }else{
         alert(`There was an eror: ${status}`)
       }
     });
     let tempNewStories = [...newStories];
-    tempNewStories.unshift({
-      content:newValue,
-      likes: 0,
-      d:12345
-    });
+    
     textAreaRef.current.value ='';
-    setNewStories(tempNewStories);
+    
   }
 
   return <div className={props.className}> 
