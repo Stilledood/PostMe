@@ -164,6 +164,7 @@ class StoryActionView(APIView):
             content= data.get('content')
             story_queryset = self.class_model.objects.filter(pk=storyId)
             story = story_queryset[0]
+            print(story)
             if not story:
                 return Response({},status=404)
             if action == 'like':
@@ -180,14 +181,20 @@ class StoryActionView(APIView):
                 if request.user in story.likes.all():
                     story.likes.remove(request.user)
                     serializer = StorySerializer(story)
+
                     return Response(serializer.data,status=200)
             elif action == 'repost':
                 repost_story = Story.objects.create(
                     user=request.user,
-                    parent=story,
-                    content=story.content,
+                    content=content,
+                    parent = story
                     )
+
+
                 serializer = StorySerializer(repost_story)
+
+
+
                 return Response(serializer.data,status=201)
 
 

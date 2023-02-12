@@ -135,21 +135,11 @@ export function ActionBtn(props) {
   const className = props.className ? props.className : 'btn btn-primary btn-sm';
   const actionDisplay = action.display ? action.display:"Action";
   const [likes,setLikes] = useState(story.likes ? story.likes:0);
-  const [justClicked,setJustClicked] =useState(false); 
-  const handleActionEvent = (response,status) =>{
-    console.log(response);
-    if (action.type === 'like'){
-      if (justClicked === true){
-        setLikes(likes-1);
-        setJustClicked(false);        
-      }else{
-        setLikes(story.likes+1); 
-        setJustClicked(true);
-        
-      }     
+  const handleActionEvent = (response,status) =>{ 
+    if (status === 200){
+      setLikes(response.likes);
     }
   }
-
   const handleClick = (event) =>{
     event.preventDefault();
     apiStoryAction(story.id,action.type,story.content,handleActionEvent);
@@ -159,11 +149,26 @@ export function ActionBtn(props) {
   const display = action.type === 'like'? `${likes} ${actionDisplay}`:actionDisplay;
   return  <button className={className} onClick={handleClick} > {display} </button>;
 }
+
+export function StoryParent(props){
+  const {story} = props;
+  return story.original_story ? <div className='row'>
+    <div className='col-11 mx-auto  p-3 border rounded'>
+    <p className='mb-0 text-muted small'>Repost</p>
+    <Story className={' '} story={story.original_story}/> 
+    </div>
+  </div> : null
+}
 export function Story(props){
   const {story} = props;
   const className = props.className ? props.className:'col-10 mx-auto col-md-8';
   return <div className={className}>
-      <p>{story.id} - {story.content}</p>
+        <div>
+          <p>{story.pk} {story.id} - {story.content}</p>
+          <StoryParent story={story} />
+
+        </div>
+        
         <div className='btn btn-group'>
           <ActionBtn story={story} action={{type:"like",display:"Likes"}}></ActionBtn>
           <ActionBtn story={story} action={{type:"Unlike",display:"Unlike"}}></ActionBtn>
