@@ -101,7 +101,6 @@ export function StoriesList(props){
     const [storiesInit,setStoriesInit] = useState([]);
     const [stories,setStories] = useState([]);
     const [storiesDidSet,setStoriesDidSet] = useState(false)
-    
     useEffect(()=>{
       let final =[...props.newStories].concat(storiesInit);
       if (final.length !== stories.length){
@@ -124,25 +123,41 @@ export function StoriesList(props){
         }
 
       },[storiesInit,storiesDidSet,setStoriesDidSet])
+      const handleDidRepost =(newStory) =>{
+        const updatedStories =[...storiesInit];
+        updatedStories.unshift(newStory);
+        setStoriesInit(updatedStories);
+        const updateFinalStories = [...stories];
+        updateFinalStories.unshift(newStory);
+        setStories(updateFinalStories);
+        
+      
+      }
       return stories.map((item,index)=>{
-          return <Story story={item}  className ='col-12 mb-3 border bg-white text-dark width=50%'  key={`${index}-{item.id}`}  />
+
+          return <Story 
+          story={item} 
+          didRepost = {handleDidRepost}
+          className ='col-12 mb-3 border bg-white text-dark width=50%' 
+          key={`${index}-{item.id}`}  />
   })}
 
 
 
 export function ActionBtn(props) {
-  const {story,action} = props;
+  const {story,action,didPerformAction} = props;
   const className = props.className ? props.className : 'btn btn-primary btn-sm';
   const actionDisplay = action.display ? action.display:"Action";
-  const [likes,setLikes] = useState(story.likes ? story.likes:0);
+  const likes = story.likes ? story.likes : 0;
   const handleActionEvent = (response,status) =>{ 
-    if (status === 200){
-      setLikes(response.likes);
+    if ((status === 200 || status === 201) && didPerformAction){
+      didPerformAction(response,status);
     }
   }
   const handleClick = (event) =>{
     event.preventDefault();
-    apiStoryAction(story.id,action.type,story.content,handleActionEvent);
+    let storyPk = story.id ? story.id:story.pk
+    apiStoryAction(storyPk,action.type,story.content,handleActionEvent);
     
   };
     
@@ -151,7 +166,7 @@ export function ActionBtn(props) {
 }
 
 export function StoryParent(props){
-  const {story} = props;
+  const {story,didRepost} = props;
   return story.original_story ? <div className='row'>
     <div className='col-11 mx-auto  p-3 border rounded'>
     <p className='mb-0 text-muted small'>Repost</p>
@@ -160,8 +175,20 @@ export function StoryParent(props){
   </div> : null
 }
 export function Story(props){
-  const {story} = props;
+  const {story,didRepost} = props;
   const className = props.className ? props.className:'col-10 mx-auto col-md-8';
+  const [actionStory,setActionStory] = useState(props.story ? props.story:null);
+  const handlePerformAction = (newActionStory,status) =>{
+    if (status === 200){
+      setActionStory(newActionStory);
+    }else if (status === 201){
+      if (didRepost){
+        didRepost(newActionStory);
+      }
+    }
+    
+  }
+
   return <div className={className}>
         <div>
           <p>{story.pk} {story.id} - {story.content}</p>
@@ -169,11 +196,11 @@ export function Story(props){
 
         </div>
         
-        <div className='btn btn-group'>
-          <ActionBtn story={story} action={{type:"like",display:"Likes"}}></ActionBtn>
-          <ActionBtn story={story} action={{type:"Unlike",display:"Unlike"}}></ActionBtn>
-          <ActionBtn story={story} action={{type:"repost",display:"Repost"}}></ActionBtn>
-        </div>
+        {actionStory && <div className='btn btn-group'>
+          <ActionBtn story={actionStory} didPerformAction={handlePerformAction} action={{type:"like",display:"Likes"}}></ActionBtn>
+          <ActionBtn story={actionStory} didPerformAction={handlePerformAction} action={{type:"Unlike",display:"Unlike"}}></ActionBtn>
+          <ActionBtn story={actionStory} didPerformAction={handlePerformAction} action={{type:"repost",display:"Repost"}}></ActionBtn>
+        </div> }
       
     </div>
        
