@@ -5,9 +5,12 @@ import App from './App';
 import { StoryComponent } from './stories';
 import reportWebVitals from './reportWebVitals';
 
+
 const storiesEl = ReactDOM.createRoot( document.getElementById('postme-stories'));
+const storiesElement = document.getElementById('postme-stories');
+
 storiesEl.render(
-  <StoryComponent />
+  <StoryComponent dataset = {storiesElement.dataset} />
 )
 
 

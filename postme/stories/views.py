@@ -14,12 +14,16 @@ from .serializers import StorySerializer,StoryActionSerializer,StoryCreateSerial
 
 
 class StoryListWithSerailizer(APIView):
-    '''Class to construct a list of all Story objects from database (using REST serailizer instead of manual process all data) and send this list to frontend'''
+
 
     model_class = Story
 
     def get(self,request):
         qs = self.model_class.objects.all()
+        username = request.GET.get('username')
+        print(username)
+        if username != None:
+            qs = self.model_class.objects.filter(user__username__iexact = username)
         serializer = StorySerializer(qs,many=True)
         return Response(serializer.data)
 

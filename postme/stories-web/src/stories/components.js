@@ -63,6 +63,7 @@ export function apiStoriesList(callback){
 }
 
 export function StoryComponent(props) {
+  console.log(props.dataset.username);
   const textAreaRef = React.createRef();
   const [newStories,setNewStories] = useState([]);
   const handleBackendUpdate = (response,status) =>{
