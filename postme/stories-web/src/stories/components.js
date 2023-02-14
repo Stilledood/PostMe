@@ -57,13 +57,24 @@ export function apiStoryAction(storyId,action,content,callback){
   lookup("POST","stories/action",callback,{id:storyId,action:action,content:content});
 }
 
-export function apiStoriesList(callback){
-  lookup("GET","stories/",callback)
+export function apiStoriesList(username,callback){
+  let endpoint = "stories/";
+  if (username){
+    endpoint = `stories/?username=${username}`;
+  }
+  lookup("GET",endpoint,callback)
 
 }
 
+export function apiStoryDetails(storyId,callback){
+  let endpoint = `stories/${storyId}`  
+   lookup('GET',endpoint,callback)
+}
+
+
 export function StoryComponent(props) {
-  console.log(props.dataset.username);
+  const username = props.dataset.username ? props.dataset.username:null;
+  
   const textAreaRef = React.createRef();
   const [newStories,setNewStories] = useState([]);
   const handleBackendUpdate = (response,status) =>{
@@ -92,7 +103,7 @@ export function StoryComponent(props) {
               <button type='submit' className='btb btn-primary my-3' >Post</button>
             </form>           
             </div>
-            <StoriesList newStories ={newStories}/> 
+            <StoriesList newStories={newStories} username={username}/> 
         </div>
           
 
@@ -120,10 +131,10 @@ export function StoriesList(props){
             }
   
           }
-          apiStoriesList(handleStoriesLookup);
+          apiStoriesList(props.username,handleStoriesLookup);
         }
 
-      },[storiesInit,storiesDidSet,setStoriesDidSet])
+      },[storiesInit,storiesDidSet,setStoriesDidSet,props.username])
       const handleDidRepost =(newStory) =>{
         const updatedStories =[...storiesInit];
         updatedStories.unshift(newStory);
