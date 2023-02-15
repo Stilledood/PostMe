@@ -1,7 +1,8 @@
 import React,{useEffect,useState} from 'react';
-import { apiStoryCreate } from './lookup';
+import {apiStoryDetails} from './lookup'
 import { StoriesList } from './list';
 import {StoryCreate} from './create'
+import {Story} from './details'
 
 
 
@@ -21,6 +22,30 @@ export function StoryComponent(props) {
         </div>          
 }
 
+
+export function StoryDetailComponent(props){
+   const {storyId} = props;
+  
+   const [didLookup,setDidLookup] = useState(false);
+   const [story,setStory] = useState(null);
+   const handleBackupLookup = (response,status)=>{
+    if (status === 200) {
+      setStory(response)
+    }else{
+      alert('There was an error finding your Story');
+    }
+
+   }
+   useEffect(()=>{
+    if (didLookup === false){
+      apiStoryDetails(storyId);
+      setDidLookup(true);
+
+
+    }
+   },[storyId,didLookup,setDidLookup])
+  return story === null ? null:<Story story={story} className={props.className}/>
+}
 
 
 

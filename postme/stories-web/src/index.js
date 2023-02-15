@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import { StoryComponent } from './stories';
+import { StoryComponent, StoryDetailComponent } from './stories';
 import reportWebVitals from './reportWebVitals';
 
 
@@ -12,6 +12,21 @@ const storiesElement = document.getElementById('postme-stories');
 storiesEl.render(
   <StoryComponent dataset = {storiesElement.dataset} />
 )
+
+const storyDetailElements = document.querySelectorAll('postme-detail');
+for (let key in storyDetailElements){
+  console.log(key)
+}
+
+console.log(storyDetailElements.length);
+
+storyDetailElements.forEach(container =>{
+  
+  const containerEl = ReactDOM.createRoot(container);
+  containerEl.render(
+    <StoryDetailComponent dataset={container.dataset}/>
+  )
+})
 
 
 

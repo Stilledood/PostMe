@@ -4,8 +4,6 @@ import { apiStoryCreate } from './lookup';
 
 export function StoryCreate(props){
   const {didPost} = props;
-  
-  console.log(didPost); 
   const textAreaRef = React.createRef();
   const handleBackendUpdate = (response,status) =>{
     if (status === 201){   
