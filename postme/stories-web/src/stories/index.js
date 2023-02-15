@@ -1,4 +1,8 @@
-import {ActionBtn,Story,StoriesList,StoryComponent} from './components'
+import {StoryComponent} from './components'
+import {ActionBtn} from './buttons'
+import {Story} from './details'
+import { StoriesList } from './list'
+
 
 export {
     ActionBtn,
