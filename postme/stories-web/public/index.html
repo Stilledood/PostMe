@@ -47,16 +47,21 @@
     -->
     <script>
       var path = window.location.pathname;
-      if (path !== "/"){
+      var idRegex = /(?<storyid>\d+)/ ;
+      var match = path.match(idRegex);
+      var storyId = match.groups.storyid ;
+      if (storyId){
         var postmeElement = document.getElementById("postme-stories");
         postmeElement.className = "d-none";
+        var storyElement = `<div class='postme-details' data-story-id=${storyId} data-class-name='col5 mx-auto'></div>`;
+        var mainContainer = document.getElementById('story-container');
+        mainContainer.innerHTML= storyElement;
       }
-      var storyId = 192;
-      var storyElement = `<div class='postme-details' data-story-id=${storyId} data-class-name='col5 mx-auto'></div>`;
-      var mainContainer = document.getElementById('story-container');
+      
+   
     
       
-      mainContainer.innerHTML= storyElement;
+     
 
       
 
