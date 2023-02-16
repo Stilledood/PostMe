@@ -32,9 +32,9 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-      <div class ='d-none' id="postme-stories" data-username='Florin' data-can-post="true">
-      </div>
-      <div class="postme-detail" data-story-id="2"></div>
+      <div id="story-container"></div>
+      <div  id="postme-stories" data-username='Florin' data-can-post="true"></div>
+   
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -45,5 +45,21 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script>
+      var path = window.location.pathname;
+      if (path !== "/"){
+        var postmeElement = document.getElementById("postme-stories");
+        postmeElement.className = "d-none";
+      }
+      var storyId = 192;
+      var storyElement = `<div class='postme-details' data-story-id=${storyId} data-class-name='col5 mx-auto'></div>`;
+      var mainContainer = document.getElementById('story-container');
+    
+      
+      mainContainer.innerHTML= storyElement;
+
+      
+
+    </script>
   </body>
 </html>

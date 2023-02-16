@@ -24,8 +24,8 @@ export function StoryComponent(props) {
 
 
 export function StoryDetailComponent(props){
-   const {storyId} = props;
-  
+   const storyId = props.dataset.storyId;
+   
    const [didLookup,setDidLookup] = useState(false);
    const [story,setStory] = useState(null);
    const handleBackupLookup = (response,status)=>{
@@ -38,7 +38,7 @@ export function StoryDetailComponent(props){
    }
    useEffect(()=>{
     if (didLookup === false){
-      apiStoryDetails(storyId);
+      apiStoryDetails(storyId,handleBackupLookup);
       setDidLookup(true);
 
 

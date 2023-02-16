@@ -19,9 +19,11 @@ function getCookie(name) {
   
  export  function lookup(method,endpoint,callback,data){
     let jsonData;
+   
+    
     if (data){
        jsonData = JSON.stringify(data);
-       console.log(jsonData)
+       
     }
   
     const xhr = new XMLHttpRequest();

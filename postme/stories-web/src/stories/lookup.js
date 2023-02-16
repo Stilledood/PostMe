@@ -20,6 +20,7 @@ lookup("GET",endpoint,callback)
 }
 
 export function apiStoryDetails(storyId,callback){
+
     let endpoint = `stories/${storyId}`
-     lookup('GET',endpoint,callback)
+    lookup('GET',endpoint,callback)
 }
