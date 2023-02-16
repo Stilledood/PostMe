@@ -49,8 +49,9 @@
       var path = window.location.pathname;
       var idRegex = /(?<storyid>\d+)/ ;
       var match = path.match(idRegex);
-      var storyId = match.groups.storyid ;
-      if (storyId){
+      
+      if (match){
+        var storyId = match.groups.storyid ;
         var postmeElement = document.getElementById("postme-stories");
         postmeElement.className = "d-none";
         var storyElement = `<div class='postme-details' data-story-id=${storyId} data-class-name='col5 mx-auto'></div>`;

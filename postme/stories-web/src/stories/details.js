@@ -15,6 +15,17 @@ export function StoryParent(props){
     const {story,didRepost,hideActions} = props;
     const className = props.className ? props.className:'col-10 mx-auto col-md-8';
     const [actionStory,setActionStory] = useState(props.story ? props.story:null);
+    const path = window.location.pathname;
+    const idRegex = /(?<storyid>\d+)/ ;
+    const match = path.match(idRegex);
+    const urlStoryId = match ? path.match(idRegex).groups.storyid : -1;
+    const isDetail = `${urlStoryId}` === `${story.id}`
+    const handleLink = (event) =>{
+      event.preventDefault();
+      window.location.href = `/${story.id}`
+      
+
+    }
     const handlePerformAction = (newActionStory,status) =>{
       if (status === 200){
         setActionStory(newActionStory);
@@ -37,6 +48,7 @@ export function StoryParent(props){
             <ActionBtn story={actionStory} didPerformAction={handlePerformAction} action={{type:"like",display:"Likes"}}></ActionBtn>
             <ActionBtn story={actionStory} didPerformAction={handlePerformAction} action={{type:"Unlike",display:"Unlike"}}></ActionBtn>
             <ActionBtn story={actionStory} didPerformAction={handlePerformAction} action={{type:"repost",display:"Repost"}}></ActionBtn>
+            {isDetail === true ? null :<button className="btn btn-outline-primary" onClick={handleLink}>View</button>}
           </div> }
         
       </div>
