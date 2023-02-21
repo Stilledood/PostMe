@@ -10,6 +10,7 @@
     <div class="col-md-4 mx-auto col-10">
         <form class="form"  id="story-create_form" method="POST" action ="stories/create-story">
             {% csrf_token %}
+            <div class="d-none alert alert-danger" id="story-create-form-error"></div>
             <input type="hidden" value="/" name="next"/>
             <textarea class="form-control border rounded py-3 mb-2" required="True" name="content" placeholder="Your Story......"></textarea>
             <button class="btn btn-primary" type="submit">Post</button>
@@ -23,6 +24,16 @@
 
 
 <script>
+
+    function handleFormCreateStoryError(message,display) {
+        var formErrorElement = document.getElementById('story-create-form-error')
+        if (display === true){
+            formErrorElement.setAttribute("class","alert alert-danger")
+            formErrorElement.innerText = message;
+        }else{
+            formErrorElement.setAttribute("class","d-none alert alert-danger")
+        }
+    }
 
     function handleStoryCreateFormDidSubmit(event){
         event.preventDefault();
@@ -47,6 +58,19 @@
                 myForm.reset();
             }else if (xhr.status === 400){
                 const errorJson = xhr.response;
+                const contentError = errorJson.content;
+                let messageError;
+                if (contentError) {
+                    messageError = contentError[0];
+                    if (messageError){
+                        handleFormCreateStoryError(messageError,true)
+                    }else{
+                        alert('An error occured.Please try again later')
+                    }
+                }else{
+                    alert('An error occured.Please try again later')
+                }
+
             }else if (xhr.status === 500){
                 alert('There was a server error.Please try again later');
             }

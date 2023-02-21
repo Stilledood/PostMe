@@ -10,7 +10,7 @@ class StoryForm(forms.ModelForm):
     def clean_content(self):
         content = self.cleaned_data.get('content')
         if len(content) > MAX_STORY_LENGHT:
-            raise forms.ValidationError('Story too long')
+            raise forms.ValidationError('Story to long')
         return content
 
 
