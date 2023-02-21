@@ -50,6 +50,7 @@
         xhr.setRequestHeader("HTTP_X_REQUESTED_WITH","XMLHttpRequest");    
         xhr.onload = function(){
             if (xhr.status === 201){
+                handleFormCreateStoryError("",false);
                 const newStoryJson = xhr.response;
                 // const newStoryJson = JSON.parse(newStory);
                 const newStoryFormat = formatStory(newStoryJson);
