@@ -47,7 +47,8 @@
                 myForm.reset();
             }else if (xhr.status === 400){
                 const errorJson = xhr.response;
-                
+            }else if (xhr.status === 500){
+                alert('There was a server error.Please try again later');
             }
             
         }
