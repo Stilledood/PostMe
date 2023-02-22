@@ -32,10 +32,17 @@ class StoryCreate(View):
         return render(request,self.template_name,context={'form':self.form_class()})
 
     def post(self,request):
+        if not request.user.is_authenticated:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({},status = 401)
+            return redirect(settings.LOGIN_URL)
+
         bound_form = self.form_class(request.POST)
         next_url = request.POST.get('next')
         if bound_form.is_valid():
             story = bound_form.save(commit=False)
+            user = request.user
+            story.user = user
             story.save()
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse(story.serialize(),status=201)

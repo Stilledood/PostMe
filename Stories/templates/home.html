@@ -10,7 +10,7 @@
     <div class="col-md-4 mx-auto col-10">
         <form class="form"  id="story-create_form" method="POST" action ="stories/create-story">
             {% csrf_token %}
-            <div class="d-none alert alert-danger" id="story-create-form-error"></div>
+            <div class="d-none alert alert-danger" id="handleFormCreateStoryError"></div>
             <input type="hidden" value="/" name="next"/>
             <textarea class="form-control border rounded py-3 mb-2" required="True" name="content" placeholder="Your Story......"></textarea>
             <button class="btn btn-primary" type="submit">Post</button>
@@ -25,116 +25,105 @@
 
 <script>
 
-    function handleFormCreateStoryError(message,display) {
-        var formErrorElement = document.getElementById('story-create-form-error')
+    const storyContainerElement = document.getElementById("Stories")
+    const storyCreateFormElement = document.getElementById("story-create_form")
+
+    storyCreateFormElement.addEventListener("submit",handleStoryCreateFormDidSubmit)
+
+    function  handleFormCreateStoryError(message,display){
+        var alertElement = document.getElementById("handleFormCreateStoryError")
         if (display === true){
-            formErrorElement.setAttribute("class","alert alert-danger")
-            formErrorElement.innerText = message;
+            alertElement.setAttribute("class","alert alert-danger")
+            alertElement.innerText = message
         }else{
-            formErrorElement.setAttribute("class","d-none alert alert-danger")
+            alertElement.setAttribute("class","d-none alert alert-danger")
         }
     }
+
 
     function handleStoryCreateFormDidSubmit(event){
-        event.preventDefault();
-        const myForm = event.target;
+        event.preventDefault()
+        const myForm = event.target
         const myFormData = new FormData(myForm);
-        const url = myForm.getAttribute("action");
-        const method =  myForm.getAttribute("method");
-        const responseType = "json";
-    
-        const xhr = new XMLHttpRequest();
-        xhr.responseType = responseType;
-        xhr.open(method,url);
-        xhr.setRequestHeader("X-Requested-With","XMLHttpRequest");
-        xhr.setRequestHeader("HTTP_X_REQUESTED_WITH","XMLHttpRequest");    
-        xhr.onload = function(){
+        const method = myForm.getAttribute("method")
+        const endpoint = myForm.getAttribute("action")
+        const responseType = "json"
+
+        const xhr = new XMLHttpRequest()
+        xhr.responseType = responseType
+        xhr.open(method,endpoint)
+        xhr.setRequestHeader("X-Requested-With","XMLHttpRequest")
+        xhr.setRequestHeader("HTTP_X_REQUESTED_WITH","XMLHttpRequest")
+
+        xhr.onload = function (){
             if (xhr.status === 201){
-                handleFormCreateStoryError("",false);
-                const newStoryJson = xhr.response;
-                // const newStoryJson = JSON.parse(newStory);
-                const newStoryFormat = formatStory(newStoryJson);
-                const orgHtml = storiesContainerElement.innerHTML;
-                storiesContainerElement.innerHTML = newStoryFormat + orgHtml;
-                myForm.reset();
+                handleFormCreateStoryError("",false)
+                let newStory = xhr.response
+                let newStoryFormatted = formatStory(newStory)
+                const ogHtml = storyContainerElement.innerHTML
+                storyContainerElement.innerHTML = newStoryFormatted+ogHtml
+                myForm.reset()
             }else if (xhr.status === 400){
-                const errorJson = xhr.response;
-                const contentError = errorJson.content;
-                let messageError;
-                if (contentError) {
-                    messageError = contentError[0];
-                    if (messageError){
-                        handleFormCreateStoryError(messageError,true)
-                    }else{
-                        alert('An error occured.Please try again later')
-                    }
+                const errorMessage = xhr.response.content[0]
+                if (errorMessage){
+                    handleFormCreateStoryError(errorMessage,true)
                 }else{
-                    alert('An error occured.Please try again later')
+                    alert("An error occured.Please try again")
                 }
-
             }else if (xhr.status === 500){
-                alert('There was a server error.Please try again later');
+                alert("Server error.Try again later")
+            }else{
+                alert("An error occured.Please try again")
             }
-            
+            }
+            xhr.onerror = function(){
+                alert("An error occured.Please try again")
+            }
+            xhr.send(myFormData)
         }
-        xhr.onerror =  function(){
-            alert('An error ocurred .Please try again later')
-        }
-        xhr.send(myFormData) 
-    }
 
 
-
-    
-    const formElement = document.getElementById("story-create_form")
-    formElement.addEventListener('submit',handleStoryCreateFormDidSubmit)
-
-
-    const storiesContainerElement = document.getElementById('Stories');
-
-    function loadStories(storiesElement){
+       
         
-        const xhr = new XMLHttpRequest();
-        const method = "GET";
-        const url = "/stories"
-        const responseType = 'json';
-        xhr.responseType = responseType;
+
     
-        xhr.open(method,url);
-        xhr.onload = function(){
-            const serverResponse = xhr.response;
-            let storiesList = serverResponse.response;
-            let finalStoryStr = '';
+
+    function loadStories(storiesEl){
+        const xhr = new XMLHttpRequest()
+        const method = "GET"
+        const endpoint = "stories"
+        const responseType = "json"
+
+        xhr.responseType = responseType
+        xhr.open(method,endpoint)
+        xhr.onload = function () {
+            let storiesList = xhr.response.response
+            let finalStoryString = ''
             storiesList.forEach(element => {
-                let currentItem = formatStory(element);
-                finalStoryStr += currentItem;
-                
-            });
-            storiesElement.innerHTML = finalStoryStr;
-        };
-        
+                finalStoryString += formatStory(element)
+            }); 
+            storiesEl.innerHTML = finalStoryString
+        }
         xhr.send()
-
     }
-    loadStories(storiesContainerElement);
 
-    function handleLikeButton(storyId,likes){
-        console.log(storyId,likes)
+    function formatStory(story) {
+        let storyString = `<div class ='col-12 col-md-10 mx-auto border rounded py-3 mb-4 story' id='story-${story.id}'>
+            <p>${story.content}</p>
+            <div class='btn-group'>${LikeBtn(story)}</div> 
+            </div>`
+        return storyString
+    }
 
+    function handleLikeButton(id,likes){
+        console.log(id,likes)
     }
 
     function LikeBtn(story){
         return `<button class='btn btn-primary btn-sm' onclick=handleLikeButton(${story.id},${story.likes})>${story.likes} Likes</button>`
     }
 
-    function formatStory(story){
-        let formattedStory = `<div class ='col-12 col-md-10 mx-auto border rounded py-3 mb-4 story' id='story-${story.id}'>
-            <p>${story.content}</p>
-            <div class='btn-group'>${LikeBtn(story)}</div> 
-            </div>`
-        return formattedStory
-
-    }
+    loadStories(storyContainerElement)
 
     
 </script>
