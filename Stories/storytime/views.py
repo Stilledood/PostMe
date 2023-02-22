@@ -5,6 +5,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.conf import settings
 from .models import Story
 from .form import StoryForm
+from .serializers import StorySerializer
 import random
 
 def home_view(request,*args,**kwargs):
@@ -24,7 +25,17 @@ class StoriesList(View):
         return JsonResponse(stories_json,status=200)
 
 class StoryCreateWithSerializer(View):
-    pass
+
+    def post(self,request):
+        data = request.POST
+        serializer = StorySerializer(data=data)
+        if serializer.is_valid():
+            obj = serializer.save(user=request.user)
+            return JsonResponse(serializer.data,status=201)
+
+
+
+
 
 
 
