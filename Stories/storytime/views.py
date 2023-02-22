@@ -23,7 +23,12 @@ class StoriesList(View):
 
         return JsonResponse(stories_json,status=200)
 
-class StoryCreate(View):
+class StoryCreateWithSerializer(View):
+    pass
+
+
+
+class StoryCreateWithDjango(View):
     model_class = Story
     form_class = StoryForm
     template_name = 'storytime/story_create.html'

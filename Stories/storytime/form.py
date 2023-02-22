@@ -1,7 +1,8 @@
 from django import forms
 from .models import Story
+from django.conf import settings
 
-MAX_STORY_LENGHT = 500
+MAX_STORY_LENGHT = settings.MAX_STORY_LENGHT
 class StoryForm(forms.ModelForm):
     class Meta:
         model = Story
