@@ -45,6 +45,7 @@
         event.preventDefault()
         const myForm = event.target
         const myFormData = new FormData(myForm);
+        
         const method = myForm.getAttribute("method")
         const endpoint = myForm.getAttribute("action")
         const responseType = "json"
@@ -66,6 +67,7 @@
             }else if (xhr.status === 400){
                 const errorMessage = xhr.response.content[0]
                 if (errorMessage){
+                    console.log(xhr.response)
                     handleFormCreateStoryError(errorMessage,true)
                 }else{
                     alert("An error occured.Please try again")

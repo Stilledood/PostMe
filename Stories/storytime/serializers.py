@@ -13,7 +13,7 @@ class StorySerializer(serializers.ModelSerializer):
 
     def validate_content(self,value):
         if len(value) > MAX_STORY_LENGHT:
-            raise serializers.ValidationError("Story to long")
+            raise serializers.ValidationError(detail="Story to long",code=400)
         return value
 
     
