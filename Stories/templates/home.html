@@ -77,6 +77,9 @@
             }else if (xhr.status === 401){
                 alert("You must log in")
                 window.location.href = '/login'
+            }else if (xhr.status === 403){
+                alert("You must log in")
+                window.location.href = '/login'
             }
             }
             xhr.onerror = function(){

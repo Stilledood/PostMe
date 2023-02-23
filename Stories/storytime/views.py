@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.views.generic import View
 from django.http import JsonResponse,HttpResponse
 from rest_framework.views import APIView
-from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.conf import settings
 from .models import Story
@@ -44,8 +44,9 @@ class StoriesListWithDjango(View):
 # new class -use REST
 class StoryCreateWithSerializer(APIView):
 
-    def post(self,request):
+    permission_classes = [IsAuthenticated]
 
+    def post(self,request):
         serializer = StorySerializer(data=request.POST)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user)
@@ -101,6 +102,8 @@ class StoryDetailsWithDjango(View):
 
 # new view -Apiview to display details of a story object
 class StoryDetails(APIView):
+
+    '''API view'''
 
     model_class = Story
 
