@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from django.views.generic import View
 from django.http import JsonResponse,HttpResponse
 from rest_framework.views import APIView
+from rest_framework import generics
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.conf import settings
 from .models import Story
@@ -13,7 +14,21 @@ import random
 def home_view(request,*args,**kwargs):
     return render(request,template_name='home.html',context={})
 
-class StoriesList(View):
+class StoriesListWithSerializer(APIView):
+    '''API View'''
+
+    model_class = Story
+
+    def get(self,request):
+        qs = self.model_class.objects.all()
+        serializer = StorySerializer(qs,many=True)
+        return Response(serializer.data)
+
+
+
+
+
+class StoriesListWithDjango(View):
 
     model_class = Story
 
@@ -26,27 +41,19 @@ class StoriesList(View):
 
         return JsonResponse(stories_json,status=200)
 
+# new class -use REST
 class StoryCreateWithSerializer(APIView):
-
-    def get(self,request):
-        pass
 
     def post(self,request):
 
         serializer = StorySerializer(data=request.POST)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user)
-            return Response(serializer.data)
+            return Response(serializer.data,status=201)
         return Response({},status=400)
 
 
-
-
-
-
-
-
-
+# Old view -use pure django
 class StoryCreateWithDjango(View):
     model_class = Story
     form_class = StoryForm
