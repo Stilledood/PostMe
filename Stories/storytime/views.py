@@ -110,7 +110,7 @@ class StoryDetails(APIView):
             serializer = StorySerializer(story)
             return Response(serializer.data,status=200)
         except:
-            pass
+            return Response({},status=404)
 
 
 
