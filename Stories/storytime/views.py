@@ -14,7 +14,7 @@ import random
 def home_view(request,*args,**kwargs):
     return render(request,template_name='home.html',context={})
 
-class StoriesListWithSerializer(APIView):
+class StoriesList(APIView):
     '''API View'''
 
     model_class = Story
@@ -84,7 +84,8 @@ class StoryCreateWithDjango(View):
                 return JsonResponse(bound_form.errors,status=400)
             return render(request,self.template_name,context={'form':bound_form})
 
-class StoryDetails(View):
+# old view -using Pure Django
+class StoryDetailsWithDjango(View):
 
     model_class = Story
     def get(self,request,story_id):
@@ -97,6 +98,20 @@ class StoryDetails(View):
                 'content':'Story not found'
             }
         return JsonResponse(data,status=200)
+
+# new view -Apiview to display details of a story object
+class StoryDetails(APIView):
+
+    model_class = Story
+
+    def get(self,request,story_id):
+        try:
+            story = self.model_class.objects.get(pk=story_id)
+            serializer = StorySerializer(story)
+            return Response(serializer.data,status=200)
+        except:
+            pass
+
 
 
 

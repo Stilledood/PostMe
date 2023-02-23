@@ -66,6 +66,8 @@
                 myForm.reset()
             }else if (xhr.status === 400){
                 const errorMessage = xhr.response.content[0]
+                if (errorMessage){
+                    console.log(xhr.response)
                     handleFormCreateStoryError(errorMessage,true)
                 }else{
                     alert("An error occured.Please try again")
