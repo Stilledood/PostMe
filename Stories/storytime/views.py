@@ -3,6 +3,7 @@ from django.views.generic import View
 from django.http import JsonResponse,HttpResponse
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.conf import settings
 from .models import Story
@@ -45,6 +46,7 @@ class StoriesListWithDjango(View):
 class StoryCreateWithSerializer(APIView):
 
     permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
 
     def post(self,request):
         serializer = StorySerializer(data=request.POST)
