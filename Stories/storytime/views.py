@@ -8,7 +8,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.conf import settings
 from .models import Story
 from .form import StoryForm
-from .serializers import StorySerializer
+from .serializers import StorySerializer,StoryActionSerializer
 from rest_framework.response import Response
 import random
 
@@ -132,6 +132,37 @@ class StoryDelete(APIView):
                 return Response({"message":"Story successfully deleted"},status=200)
         except:
             return Response({"message":"You can not delete this"},status=401)
+
+class StoryAction(APIView):
+    '''
+    Allowed actions : Like,Unlike,Repost
+    '''
+
+    model_class = Story
+    def post(self,request):
+        serializer = StoryActionSerializer(request.POST)
+        if serializer.is_valid(raise_exception=True):
+            data = serializer.validated_data
+            try:
+                story = self.model_class.get(pk=data.get("id"))
+                user = request.user
+                action = data.get("action")
+                if action == "like":
+                    if user not in story.likes.all():
+                        story.likes.add(user)
+                    else:
+                        story.likes.remove(user)
+                if action == "unlike":
+                    if user in story.likes.all():
+                        story.likes.remove(user)
+                if action == "repost":
+                    pass
+                    # to do
+            except:
+                return Response({},status=404)
+
+
+
 
 
 
