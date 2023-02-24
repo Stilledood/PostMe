@@ -117,6 +117,24 @@ class StoryDetails(APIView):
         except:
             return Response({},status=404)
 
+class StoryDelete(APIView):
+    '''API view to delete a story'''
+
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    model_class = Story
+
+    def delete(self,request,story_id):
+        try:
+            story = self.model_class.objects.get(pk=story_id)
+            if story.user == request.user:
+                story.delete()
+                return Response({"message":"Story successfully deleted"},status=200)
+        except:
+            return Response({"message":"You can not delete this"},status=401)
+
+
+
 
 
 
