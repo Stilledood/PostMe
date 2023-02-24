@@ -17,10 +17,14 @@ class StoryActionSerializer(serializers.Serializer):
 
 
 class StorySerializer(serializers.ModelSerializer):
+    likes = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Story
-        fields = ['content']
+        fields = ['id', 'content', 'likes']
+
+    def get_likes(self,obj):
+        return obj.likes.count()
 
     def validate_content(self,value):
         if len(value) > MAX_STORY_LENGHT:

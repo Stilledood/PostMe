@@ -140,11 +140,17 @@ class StoryAction(APIView):
 
     model_class = Story
     def post(self,request):
-        serializer = StoryActionSerializer(request.POST)
+
+        serializer = StoryActionSerializer(data=request.data)
+
+
         if serializer.is_valid(raise_exception=True):
             data = serializer.validated_data
+
             try:
-                story = self.model_class.get(pk=data.get("id"))
+                story = self.model_class.objects.get(pk=data.get("id"))
+
+
                 user = request.user
                 action = data.get("action")
                 if action == "like":
@@ -158,6 +164,7 @@ class StoryAction(APIView):
                 if action == "repost":
                     pass
                     # to do
+                return Response({'message':'done'},status=200)
             except:
                 return Response({},status=404)
 
