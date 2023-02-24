@@ -140,3 +140,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MAX_STORY_LENGHT = 500
+STORY_ACTION_OPTIONS = ["like", "unlike", "repost"]
