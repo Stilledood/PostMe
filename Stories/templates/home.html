@@ -119,9 +119,7 @@ function getCookie(name) {
         xhr.responseType = responseType
         xhr.open(method,endpoint)
         xhr.onload = function () {
-            console.log(xhr.response)
             let storiesList = xhr.response
-
             let finalStoryString = ''
             storiesList.forEach(element => {
                 finalStoryString += formatStory(element)
@@ -134,23 +132,22 @@ function getCookie(name) {
     function formatStory(story) {
         let storyString = `<div class ='col-12 col-md-10 mx-auto border rounded py-3 mb-4 story' id='story-${story.id}'>
             <p>${story.content}</p>
-            <div class='btn-group'>${LikeBtn(story)}</div> 
+            <div class='btn-group'>${LikeBtn(story)}</div>
+            <div class='btn-group'>${UnlikeBtn(story)}</div> 
             </div>`
         return storyString
     }
 
-    function handleLikeButton(id){
+    function handleActionButton(id,action){
         const method = "POST"
         const endpoint = "stories/action"
         const responseType = "json" 
         const csrftoken = getCookie('csrftoken')
         const data = JSON.stringify({
             id:id,
-            action:"like",
+            action:action,
 
         })
-        
-
         const xhr = new XMLHttpRequest()
         xhr.responseType = responseType
         xhr.open(method,endpoint)
@@ -166,7 +163,11 @@ function getCookie(name) {
     }
 
     function LikeBtn(story){
-        return `<button class='btn btn-primary btn-sm' onclick=handleLikeButton(${story.id})>${story.likes} Likes</button>`
+        return `<button class='btn btn-primary btn-sm' onclick=handleActionButton(${story.id},'like')>${story.likes} Likes</button>`
+    }
+
+    function UnlikeBtn(story){
+        return `<button class='btn btn-primary btn-sm' onclick=handleActionButton(${story.id},'unlike')>Unlike</button>`
     }
 
     loadStories(storyContainerElement)
