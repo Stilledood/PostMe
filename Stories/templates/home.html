@@ -159,7 +159,7 @@ function getCookie(name) {
         xhr.setRequestHeader("Content-Type","application/json")
         xhr.setRequestHeader("X-CSRFToken",csrftoken)
         xhr.onload = function () {
-            console.log(xhr.status,xhr.response)
+            loadStories(storyContainerElement)
         }
         xhr.send(data)
 

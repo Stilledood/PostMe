@@ -140,10 +140,7 @@ class StoryAction(APIView):
 
     model_class = Story
     def post(self,request):
-
         serializer = StoryActionSerializer(data=request.data)
-
-
         if serializer.is_valid(raise_exception=True):
             data = serializer.validated_data
 
@@ -158,9 +155,13 @@ class StoryAction(APIView):
                         story.likes.add(user)
                     else:
                         story.likes.remove(user)
+                    story_serialized = StorySerializer(story)
+                    return Response(story_serialized.data,status=200)
                 if action == "unlike":
                     if user in story.likes.all():
                         story.likes.remove(user)
+                    story_serialized = StorySerializer(story)
+                    return Response(story_serialized.data, status=200)
                 if action == "repost":
                     pass
                     # to do
