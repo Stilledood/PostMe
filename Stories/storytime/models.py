@@ -18,18 +18,17 @@ class Story(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     likes = models.ManyToManyField(User,related_name="story_user",blank=True,through=StoryLike)
 
-    def __str__(self):
-        return self.content[:10]
-
     class Meta:
         ordering = ['-pk']
 
-    def serialize(self):
-        return {
-            'id':self.pk,
-            'content':self.content,
-            'likes':10
-        }
+    def __str__(self):
+        return self.content[:10]
+
+    @property
+    def is_repost(self):
+      return self.parent != None
+
+
 
 
 

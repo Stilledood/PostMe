@@ -8,7 +8,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.conf import settings
 from .models import Story
 from .form import StoryForm
-from .serializers import StorySerializer,StoryActionSerializer
+from .serializers import StorySerializer,StoryActionSerializer,StoryCreateSerializer
 from rest_framework.response import Response
 import random
 
@@ -49,7 +49,7 @@ class StoryCreateWithSerializer(APIView):
     authentication_classes = [SessionAuthentication]
 
     def post(self,request):
-        serializer = StorySerializer(data=request.POST)
+        serializer = StoryCreateSerializer(data=request.POST)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user)
             return Response(serializer.data,status=201)
@@ -147,6 +147,7 @@ class StoryAction(APIView):
                 story = self.model_class.objects.get(pk=data.get("id"))
                 user = request.user
                 action = data.get("action")
+                content = data.get("content")
                 if action == "like":
                     if user not in story.likes.all():
                         story.likes.add(user)
@@ -158,11 +159,16 @@ class StoryAction(APIView):
                     if user in story.likes.all():
                         story.likes.remove(user)
                     story_serialized = StorySerializer(story)
+
                     return Response(story_serialized.data, status=200)
                 if action == "repost":
-                    parent_story = story
-                    new_story = self.model_class.objects.create(user=user,parent = parent_story)
+                    new_story = self.model_class.objects.create(
+                        user=user,
+                        parent = story,
+                        content=content,
+                    )
                     serializer = StorySerializer(new_story)
+                    print(serializer.data)
                     return Response(serializer.data,status=200)
 
                 return Response({'message':'done'},status=200)
