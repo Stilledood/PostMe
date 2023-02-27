@@ -10,11 +10,19 @@ User = get_user_model()
 class StoryTestCase(TestCase):
 
     def setUp(self) -> None:
-        User.objects.create_user(username="florin",password="12345")
+        self.user = User.objects.create_user(username="florin",password="12345")
 
     def test_user_created(self):
-        user = User.objects.get(username='florin')
-        self.assertEqual(user.username, 'florin')
+        self.assertEqual(self.user.username, 'florin')
+
+
+    def test_create_story(self):
+        story = Story.objects.create(content='my story',user=self.user)
+        self.assertEqual(story.user,self.user)
+        self.assertEqual(story.id,1)
+
+    
+
 
 
 
