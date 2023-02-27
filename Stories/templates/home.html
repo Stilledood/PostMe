@@ -132,8 +132,8 @@ function getCookie(name) {
     function formatStory(story) {
         let storyString = `<div class ='col-12 col-md-10 mx-auto border rounded py-3 mb-4 story' id='story-${story.id}'>
             <p>${story.content}</p>
-            <div class='btn-group'>${LikeBtn(story)}</div>
-            <div class='btn-group'>${UnlikeBtn(story)}</div> 
+            <div class='btn-group'>${LikeBtn(story)}  ${UnlikeBtn(story)}  ${RepostBtn(story)}</div>
+            
             </div>`
         return storyString
     }
@@ -162,12 +162,17 @@ function getCookie(name) {
 
     }
 
+    function RepostBtn(story){
+        return `<button class='btn btn-primary btn-sm' onclick=handleActionButton(${story.id},'repost')>Repost</button>`
+    }
+
+
     function LikeBtn(story){
         return `<button class='btn btn-primary btn-sm' onclick=handleActionButton(${story.id},'like')>${story.likes} Likes</button>`
     }
 
     function UnlikeBtn(story){
-        return `<button class='btn btn-primary btn-sm' onclick=handleActionButton(${story.id},'unlike')>Unlike</button>`
+        return `<button class='btn btn-outline-primary btn-sm' onclick=handleActionButton(${story.id},'unlike')>Unlike</button>`
     }
 
     loadStories(storyContainerElement)
