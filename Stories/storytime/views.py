@@ -143,11 +143,8 @@ class StoryAction(APIView):
         serializer = StoryActionSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             data = serializer.validated_data
-
             try:
                 story = self.model_class.objects.get(pk=data.get("id"))
-
-
                 user = request.user
                 action = data.get("action")
                 if action == "like":
@@ -163,8 +160,11 @@ class StoryAction(APIView):
                     story_serialized = StorySerializer(story)
                     return Response(story_serialized.data, status=200)
                 if action == "repost":
-                    pass
-                    # to do
+                    parent_story = story
+                    new_story = self.model_class.objects.create(user=user,parent = parent_story)
+                    serializer = StorySerializer(new_story)
+                    return Response(serializer.data,status=200)
+
                 return Response({'message':'done'},status=200)
             except:
                 return Response({},status=404)

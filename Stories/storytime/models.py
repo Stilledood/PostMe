@@ -12,6 +12,7 @@ class StoryLike(models.Model):
 
 class Story(models.Model):
 
+    parent = models.ForeignKey("self", null=True, on_delete=models.SET_NULL)
     content = models.TextField(blank=True,null=True)
     image = models.FileField(blank=True,null=True)
     user = models.ForeignKey(User,on_delete=models.CASCADE)

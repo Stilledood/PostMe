@@ -156,6 +156,7 @@ function getCookie(name) {
         xhr.setRequestHeader("Content-Type","application/json")
         xhr.setRequestHeader("X-CSRFToken",csrftoken)
         xhr.onload = function () {
+            console.log(xhr.response)
             loadStories(storyContainerElement)
         }
         xhr.send(data)
@@ -163,7 +164,7 @@ function getCookie(name) {
     }
 
     function RepostBtn(story){
-        return `<button class='btn btn-primary btn-sm' onclick=handleActionButton(${story.id},'repost')>Repost</button>`
+        return `<button class='btn btn-outline-success btn-sm' onclick=handleActionButton(${story.id},'repost')>Repost</button>`
     }
 
 
