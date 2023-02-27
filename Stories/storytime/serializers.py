@@ -17,23 +17,6 @@ class StoryActionSerializer(serializers.Serializer):
         return value
 
 
-class StorySerializer(serializers.ModelSerializer):
-    likes = serializers.SerializerMethodField(read_only=True)
-    content = serializers.SerializerMethodField(read_only=True)
-
-    class Meta:
-        model = Story
-        fields = ['id', 'content', 'likes','is_repost']
-
-    def get_likes(self,obj):
-        return obj.likes.count()
-
-    def get_content(self,obj):
-        content = obj.content
-        if obj.is_repost:
-            content = obj.parent.content
-        return content
-
 
 class StoryCreateSerializer(serializers.ModelSerializer):
 
@@ -41,7 +24,7 @@ class StoryCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Story
-        fields = ['id','content','like']
+        fields = ['id','content','likes']
 
     def get_likes(self,obj):
         return obj.likes.count()
@@ -49,6 +32,19 @@ class StoryCreateSerializer(serializers.ModelSerializer):
         if len(value) > MAX_STORY_LENGHT:
             raise serializers.ValidationError("Story to long")
         return value
+
+class StorySerializer(serializers.ModelSerializer):
+    likes = serializers.SerializerMethodField(read_only=True)
+    original_story = StoryCreateSerializer(source='parent',read_only=True)
+
+    class Meta:
+        model = Story
+        fields = ['id', 'content', 'likes','is_repost','original_story']
+
+    def get_likes(self,obj):
+        return obj.likes.count()
+
+
 
 
 
