@@ -34,6 +34,14 @@ class StoryTestCase(TestCase):
         self.assertEqual(response.status_code,200)
         self.assertEqual(len(response.json()),1)
 
+    def test_story_detail(self):
+        client = self.get_client()
+        response = client.get("/stories/1")
+        self.assertEqual(response.status_code,200)
+        print(response.json())
+        self.assertEqual(response.json()['id'],1)
+        self.assertEqual(response.json()['content'], 'abc')
+
 
 
 
