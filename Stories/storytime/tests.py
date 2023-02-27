@@ -38,9 +38,32 @@ class StoryTestCase(TestCase):
         client = self.get_client()
         response = client.get("/stories/1")
         self.assertEqual(response.status_code,200)
-        print(response.json())
         self.assertEqual(response.json()['id'],1)
         self.assertEqual(response.json()['content'], 'abc')
+
+    def test_action_like(self):
+        client = self.get_client()
+        response = client.post("/stories/action",{"id":1,"action":"like"})
+        self.assertEqual(response.status_code,200)
+        self.assertEqual(response.json()['likes'],1)
+
+    def test_action_unlike(self):
+        client = self.get_client()
+        response = client.post("/stories/action",{"id":1,"action":"unlike"})
+        self.assertEqual(response.status_code,200)
+        self.assertEqual(response.json()["likes"],0)
+
+    def test_action_repost(self):
+        client = self.get_client()
+        response = client.post("/stories/action",{"id":1,"action":"repost"})
+        self.assertEqual(response.status_code,200)
+        self.assertEqual(response.json()["id"],2)
+        self.assertEqual(response.json()["is_repost"],True)
+        self.assertEqual(response.json()["original_story"]["id"],1)
+      
+
+
+
 
 
 
