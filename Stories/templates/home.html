@@ -61,6 +61,7 @@ function getCookie(name) {
         event.preventDefault()
         const myForm = event.target
         const myFormData = new FormData(myForm);
+        console.log(myFormData.entries)
         
         const method = myForm.getAttribute("method")
         const endpoint = myForm.getAttribute("action")
@@ -164,7 +165,7 @@ function getCookie(name) {
     }
 
     function RepostBtn(story){
-        return `<button class='btn btn-outline-success btn-sm' onclick=handleActionButton(${story.id},'repost')>Repost</button>`
+        return `<button class='btn btn-outline-success btn-sm' onclick=handleActionButton(${story.id},${story.content},'repost')>Repost</button>`
     }
 
 

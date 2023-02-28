@@ -56,11 +56,13 @@ class StoryTestCase(TestCase):
     def test_action_repost(self):
         client = self.get_client()
         response = client.post("/stories/action",{"id":1,"action":"repost"})
-        self.assertEqual(response.status_code,200)
+        self.assertEqual(response.status_code,201)
         self.assertEqual(response.json()["id"],2)
         self.assertEqual(response.json()["is_repost"],True)
         self.assertEqual(response.json()["original_story"]["id"],1)
-      
+
+
+
 
 
 

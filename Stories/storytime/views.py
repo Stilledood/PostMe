@@ -49,8 +49,10 @@ class StoryCreateWithSerializer(APIView):
     authentication_classes = [SessionAuthentication]
 
     def post(self,request):
+        print(request.POST)
         serializer = StoryCreateSerializer(data=request.POST)
         if serializer.is_valid(raise_exception=True):
+
             serializer.save(user=request.user)
             return Response(serializer.data,status=201)
         return Response({},status=400)
@@ -169,7 +171,7 @@ class StoryAction(APIView):
                     )
                     serializer = StorySerializer(new_story)
                     print(serializer.data)
-                    return Response(serializer.data,status=200)
+                    return Response(serializer.data,status=201)
 
                 return Response({'message':'done'},status=200)
             except:
