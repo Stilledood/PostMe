@@ -16,14 +16,19 @@ function loadStories(callback){
   xhr.send()
 }
 
-
+function Story(props) {
+  const {story} = props
+  const className = props.className ? props.className: "col-10 mx-auto cold-md-6"
+  return <div className={className}>
+    <p>{story.id} - {story.content}</p>
+  </div>
+}
 
 function App() {
   const [stories,setStories] = useState([])
   
   useEffect(() => {
     const myCallback = (response,status) =>{
-      console.log(response)
       setStories(response)
       
     }
@@ -37,11 +42,11 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <p>
-          {stories.map((story,index) => {
-            return <li> {story.content}</li>
+        <div>
+          {stories.map((item,index) => {
+            return <Story story={item} key={index} className="my-5 py-4 border bg-white text-dark" />
           })}
-        </p>
+        </div>
         <a
           className="App-link"
           href="https://reactjs.org"
