@@ -61,7 +61,7 @@ function getCookie(name) {
         event.preventDefault()
         const myForm = event.target
         const myFormData = new FormData(myForm);
-        console.log(myFormData.entries)
+        console.log(myFormData)
         
         const method = myForm.getAttribute("method")
         const endpoint = myForm.getAttribute("action")
