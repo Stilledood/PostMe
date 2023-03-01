@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 3rd part
     "rest_framework",
+    "corsheaders",
 
     # My apps
     'storytime'
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -72,6 +74,9 @@ TEMPLATES = [
         },
     },
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_URLS_REGEX = r"^/stories/.*$"
 if DEBUG:
     DEFAULT_RENDERER_CLASSES= [
             'rest_framework.renderers.JSONRenderer',
@@ -141,3 +146,4 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MAX_STORY_LENGHT = 500
 STORY_ACTION_OPTIONS = ["like", "unlike", "repost"]
+
