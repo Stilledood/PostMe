@@ -6,7 +6,12 @@ export function StoriesList (props){
     const [stories,setStories] = useState([])
     useEffect(() => {
       const myCallback = (response,status) =>{
-        setStories(response)
+        if (status === 200){
+            setStories(response)
+        }else{
+            alert("There was an error")
+        }
+        
       }
       loadStories(myCallback)
     },[])
@@ -27,6 +32,10 @@ export function StoriesList (props){
     xhr.open(method,endpoint)
     xhr.onload = function () {
         callback(xhr.response,xhr.status)
+    }
+    xhr.onerror = function(e){
+        callback({"message":"The request was an error"},400)
+
     }
     xhr.send()
   }
