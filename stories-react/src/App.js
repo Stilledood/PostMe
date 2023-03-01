@@ -2,6 +2,8 @@ import logo from './logo.svg';
 import './App.css';
 import React ,{useEffect,useState} from 'react';
 
+import {Story} from "./stories"
+
 function loadStories(callback){
   const xhr = new XMLHttpRequest()
   const method = "GET"
@@ -16,22 +18,7 @@ function loadStories(callback){
   xhr.send()
 }
 
-function ActionBtn(props){
-  const {story,action} = props
-  const className = props.className ? props.className : "btn btn-primary btn-sm"
-  return action.type === 'like' ? <button className={className} >{story.likes} Likes</button>:null
-}
 
-function Story(props) {
-  const {story} = props
-  const className = props.className ? props.className: "col-10 mx-auto cold-md-6"
-  return <div className={className}>
-    <p>{story.id} - {story.content}</p>
-    <div className="btn btn-group">
-      <ActionBtn story={story} action={{type:"like"}} />
-    </div>
-  </div>
-}
 
 function App() {
   const [stories,setStories] = useState([])
