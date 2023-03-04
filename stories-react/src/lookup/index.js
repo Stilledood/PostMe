@@ -1,4 +1,4 @@
- import {loadStories} from "./lookup";
+ import {loadStories} from "./components";
 
  export {
     loadStories,

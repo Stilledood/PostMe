@@ -26,8 +26,19 @@ export function StoriesList (props){
 
 export function ActionBtn(props){
     const {story,action} = props
+    const [likes,setLikes] = useState(story.likes ? story.lies:0)
     const className = props.className ? props.className : "btn btn-primary btn-sm"
-    return action.type === 'like' ? <button className={className} >{story.likes} Likes</button>:null
+    const actionDisplay = action.display ? action.display:"Action"
+    const display = action.type === "like" ? `${likes} - ${actionDisplay}`: actionDisplay
+    const handleClick = (event) =>{
+      event.preventDefault()
+      if (action.type === "like"){
+        setLikes(story.likes + 1)
+      }
+
+    }
+
+    return <button className={className} onClick={handleClick} >{display}</button>
 }
   
 export function Story(props) {
@@ -36,7 +47,9 @@ export function Story(props) {
     return <div className={className}>
         <p>{story.id} - {story.content}</p>
         <div className="btn btn-group">
-        <ActionBtn story={story} action={{type:"like"}} />
+        <ActionBtn story={story} action={{type:"like", display:"Likes"}} />
+        <ActionBtn story={story} action={{type:"unlike", display:"Unlike"}} />
+        <ActionBtn story={story} action={{type:"repost", display:"Repost"}} />
         </div>
     </div>
 }
