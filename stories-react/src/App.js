@@ -2,7 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import React ,{useEffect,useState} from 'react';
 
-import {StoriesList} from "./stories"
+import {StoryComponent} from "./stories"
 
 
 
@@ -19,7 +19,7 @@ function App() {
           Edit <code>src/App.js</code> and save to reload.
         </p>
         <div>
-          <StoriesList />
+          <StoryComponent />
         </div>
         <a
           className="App-link"

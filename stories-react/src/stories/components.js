@@ -2,6 +2,24 @@ import React ,{useEffect,useState} from 'react';
 import {loadStories} from '../lookup';
 
 
+export function StoryComponent(props){
+  const textAreaRef = React.createRef()
+  const handleSubmit = (event) =>{
+    event.preventDefault()
+    console.log(textAreaRef.current.value)
+    textAreaRef.current.value = ""
+  }
+
+  return <div className={props.className}>
+    <div className='col-12 mb-3'>
+      <form onSubmit={handleSubmit}>
+        <textarea ref={textAreaRef} className='form-control' required={true} name='story'></textarea>
+        <button type='submit' className='btn btn-primary my-3'>Post</button>
+      </form>
+    </div>
+    <StoriesList />
+  </div>
+}
 
 export function StoriesList (props){
     const [stories,setStories] = useState([])
